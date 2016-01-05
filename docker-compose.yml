@@ -20,3 +20,11 @@ keycloakdb:
         - ./data/keycloak/db:/data/db
     expose:
         - "27017"
+
+samlbridge:
+    build: components/samlbridge
+    container_name: cyclone-samlbridge
+    expose:
+        - "80"
+    ports:
+        - "8080:80"
