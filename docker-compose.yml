@@ -2,7 +2,21 @@
 keycloak:
     build: components/keycloak
     container_name: cyclone-keycloak
+    command: -b 0.0.0.0
+#    command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+    volumes:
+        - ./data/keycloak/exports:/opt/keycloak/exports
+    links:
+        - keycloakdb
     expose:
         - "8080"
     ports:
         - "9080:8080"
+
+keycloakdb:
+    image: mongo:2.6
+    container_name: cyclone-keycloakdb
+    volumes:
+        - ./data/keycloak/db:/data/db
+    expose:
+        - "27017"

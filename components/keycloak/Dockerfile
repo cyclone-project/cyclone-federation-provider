@@ -1,19 +1,18 @@
 FROM java
 
-ENV KEYCLOAK_VERSION 1.7.0.Final
+ENV KEYCLOAK_VERSION=1.7.0.Final \
+    JBOSS_HOME=/opt/keycloak
 
-WORKDIR /opt/
+WORKDIR /opt
 
-RUN wget http://search.maven.org/remotecontent?filepath=org/keycloak/keycloak-server-dist/$KEYCLOAK_VERSION/keycloak-server-dist-$KEYCLOAK_VERSION.zip -O keycloak.zip
+RUN wget http://search.maven.org/remotecontent?filepath=org/keycloak/keycloak-server-dist/$KEYCLOAK_VERSION/keycloak-server-dist-$KEYCLOAK_VERSION.zip -O keycloak.zip \
+ && unzip keycloak.zip \
+ && rm keycloak.zip \
+ && mv keycloak-$KEYCLOAK_VERSION keycloak
 
-RUN unzip keycloak.zip
+COPY config/keycloak-server.json /opt/keycloak/standalone/configuration/keycloak-server.json
+COPY config/standalone.xml /opt/keycloak/standalone/configuration/standalone.xml
 
-RUN mv keycloak-$KEYCLOAK_VERSION keycloak
-
-ENV JBOSS_HOME /opt/keycloak
-
-ADD ./keycloak-export.json /opt/keycloak-export.json
-
-ENTRYPOINT ["/opt/keycloak/bin/standalone.sh", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/keycloak-export.json", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING", "-b", "0.0.0.0"]
+ENTRYPOINT ["/opt/keycloak/bin/standalone.sh"]
 
 EXPOSE 8080
