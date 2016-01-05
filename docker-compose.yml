@@ -1,0 +1,8 @@
+
+keycloak:
+    build: components/keycloak
+    container_name: cyclone-keycloak
+    expose:
+        - "8080"
+    ports:
+        - "9080:8080"
