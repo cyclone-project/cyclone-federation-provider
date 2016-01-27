@@ -38,20 +38,45 @@ $config = array(
         'validate.logout' => true,
 
         'attributes' => array(
-            'urn:oid:2.16.840.1.113730.3.1.241',// => 'displayName',
-            'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',// => 'eduPersonPrincipalName',
-            'urn:oid:1.3.6.1.4.1.1466.155.121.1.15',// => 'schacHomeOrganization',
-            'urn:oid:1.3.6.1.4.1.5923.1.1.1.1'// => 'eduPersonAffiliation'
+            'eduPersonTargetedID' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
+            'eduPersonPrincipalName' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
+            'displayName' => 'urn:oid:2.16.840.1.113730.3.1.241',
+            'cn' => 'urn:oid:2.5.4.3',
+            'mail' => 'urn:oid:0.9.2342.19200300.100.1.3',
+            'eduPersonAffiliation' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
+            'eduPersonScopedAffiliation' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.9',
+            'schacHomeOrganization' => 'urn:oid:1.3.6.1.4.1.25178.1.2.9',
+            'schacHomeOrganizationType' => 'urn:oid:1.3.6.1.4.1.25178.1.2.10',
         ),
 
         'attributes.required' => array(
-            'urn:oid:2.16.840.1.113730.3.1.241',
-            'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
-            'urn:oid:1.3.6.1.4.1.1466.155.121.1.15',
-            'urn:oid:1.3.6.1.4.1.5923.1.1.1.1'
-            /*'eduPersonPrincipalName',
+            'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',        // eduPersonTargetedID
+            'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',         // eduPersonPrincipalNa$
+            'urn:oid:2.16.840.1.113730.3.1.241',        // displayName
+            'urn:oid:2.5.4.3',                          // cn commonName
+            'urn:oid:0.9.2342.19200300.100.1.3',        // mail
+            'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',         // eduPersonAffiliation
+            'urn:oid:1.3.6.1.4.1.5923.1.1.1.9',         // eduPersonScopedAffil$
+            'urn:oid:1.3.6.1.4.1.25178.1.2.9',          // schacHomeOrganization
+            'urn:oid:1.3.6.1.4.1.25178.1.2.10',         // schacHomeOrganizatio$
+        ),
+
+/*        'attributes.required' => array(
+            'eduPersonTargetedID',
+            'eduPersonPrincipalName',
+            'displayName',
+            'cn',
+            'mail',
+            'eduPersonAffiliation',
+            'eduPersonScopedAffiliation',
             'schacHomeOrganization',
-            'eduPersonAffiliation'*/
+            'schacHomeOrganizationType',
+        ),
+*/
+        'EntityAttributes' => array(
+            'http://macedir.org/entity-category' => array(
+                'http://www.geant.net/uri/dataprotection-code-of-conduct/v1',
+            ),
         ),
 
         /* 'RegistrationInfo' => array(
