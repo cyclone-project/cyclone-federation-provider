@@ -77,7 +77,7 @@ $config = array(
      */
     'auth.adminpassword' => '123',
     'admin.protectindexpage' => true,
-    'admin.protectmetadata' => true,
+    'admin.protectmetadata' => false,
 
     /**
      * This is a secret salt used by simpleSAMLphp when it needs to generate a secure hash
@@ -485,7 +485,7 @@ $config = array(
         /* When called without parameters, it will fallback to filter attributes ‹the old way›
          * by checking the 'attributes' parameter in metadata on IdP hosted and SP remote.
          */
-        50 => 'core:AttributeLimit',
+        //50 => 'core:AttributeLimit',
 
         /*
          * Search attribute "distinguishedName" for pattern and replaces if found

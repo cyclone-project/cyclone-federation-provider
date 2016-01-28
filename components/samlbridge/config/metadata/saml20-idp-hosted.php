@@ -25,6 +25,13 @@ $metadata['__DYNAMIC:1__'] = array(
 
 	'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
 
+	'authproc' => array(
+	    1 => array(
+		'class' => 'saml:PersistentNameID',
+		'attribute' => 'nameid',
+	    ),
+	),
+
 	/*
 	 * WARNING: SHA-1 is disallowed starting January the 1st, 2014.
 	 *
@@ -43,31 +50,6 @@ $metadata['__DYNAMIC:1__'] = array(
 	 *
 	 * Please refer to the IdP hosted reference for more information.
 	 */
-	//'signature.algorithm' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+	'signature.algorithm' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
 
-	/* Uncomment the following to use the uri NameFormat on attributes. */
-	/*
-	'attributes.NameFormat' => 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
-	'authproc' => array(
-		// Convert LDAP names to oids.
-		100 => array('class' => 'core:AttributeMap', 'name2oid'),
-	),
-	*/
-
-	/*
-	 * Uncomment the following to specify the registration information in the
-	 * exported metadata. Refer to:
-     * http://docs.oasis-open.org/security/saml/Post2.0/saml-metadata-rpi/v1.0/cs01/saml-metadata-rpi-v1.0-cs01.html
-	 * for more information.
-	 */
-	/*
-	'RegistrationInfo' => array(
-		'authority' => 'urn:mace:example.org',
-		'instant' => '2008-01-17T11:28:03Z',
-		'policies' => array(
-			'en' => 'http://example.org/policy',
-			'es' => 'http://example.org/politica',
-		),
-	),
-	*/
 );
