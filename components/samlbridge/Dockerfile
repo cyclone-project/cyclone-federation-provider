@@ -33,8 +33,9 @@ ARG commit=294c0363173cb60557909c4acd05ae877002b52e
 RUN git clone https://github.com/simplesamlphp/simplesamlphp.git /var/simplesamlphp \
  && a2ensite 000-default   \
  && chmod +x /var/crontab.conf /var/start.sh \
- && crontab /var/crontab.conf \
- && chown -R www-data:www-data /var/simplesamlphp/metadata \
+ && crontab /var/crontab.conf     \
+ && mkdir /var/simplesamlphp/data \
+ && chown -R www-data:www-data /var/simplesamlphp/metadata /var/simplesamlphp/data \
  && touch                                       \
   /var/simplesamlphp/modules/cron/enable        \
   /var/simplesamlphp/modules/discopower/enable  \
