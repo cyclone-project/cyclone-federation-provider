@@ -1,6 +1,6 @@
 FROM java
 
-ENV KEYCLOAK_VERSION=1.7.0.Final \
+ENV KEYCLOAK_VERSION=1.8.0.Final \
     JBOSS_HOME=/opt/keycloak
 
 WORKDIR /opt
