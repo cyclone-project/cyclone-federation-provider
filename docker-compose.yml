@@ -2,8 +2,8 @@
 keycloak:
     build: components/keycloak
     container_name: cyclone-keycloak
-    command: -b 0.0.0.0
-#    command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+#    command: -b 0.0.0.0
+    command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
     volumes:
         - ./data/keycloak/exports:/opt/keycloak/exports
     links:
@@ -28,3 +28,17 @@ samlbridge:
         - "80"
     ports:
         - "8080:80"
+
+cacheclean:
+    build: components/cache-clean
+    container_name: cyclone-cache-clean
+    environment:
+        - KEYCLOAK_ADMIN_USER=admin
+        - KEYCLOAK_ADMIN_PASS=admin
+        - KEYCLOAK_ADMIN_CLIENT=admin-cli
+        - KEYCLOAK_REALM=master
+        - PERIOD=60000
+        - EXCLUDED_USERS=admin;owner
+    links:
+        - keycloakdb
+        - keycloak
