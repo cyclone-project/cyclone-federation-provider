@@ -54,3 +54,4 @@ EXPOSE 443
 COPY config/cert/ /var/simplesamlphp/cert/
 COPY config/config/ /var/simplesamlphp/config/
 COPY config/metadata/ /var/simplesamlphp/metadata/
+COPY modules/cyclone/ /var/simplesamlphp/modules/cyclone/
