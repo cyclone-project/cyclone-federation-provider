@@ -31,7 +31,8 @@
     },
 
     "theme": {
-        "default": "keycloak",
+        "default": "cyclone",
+        "welcomeTheme": "cyclone",
         "staticMaxAge": 2592000,
         "cacheTemplates": true,
         "cacheThemes": true,

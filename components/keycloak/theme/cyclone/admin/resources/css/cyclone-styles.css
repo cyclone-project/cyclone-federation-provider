@@ -1,0 +1,8 @@
+
+.navbar-pf .navbar-brand {
+	width: 180px;
+	height: 60px;
+	line-height: 60px;
+	background-image: url('../img/cyclone-logo.png');
+	background-size: contain;
+}

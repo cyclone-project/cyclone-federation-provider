@@ -1,0 +1,54 @@
+body {
+    background: #ededed;
+    background: -moz-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #ededed), color-stop(53%, #f6f6f6), color-stop(100%, #ffffff));
+    background: -webkit-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: -o-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: -ms-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: linear-gradient(to bottom, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#ffffff', GradientType=0 );
+}
+
+.wrapper {
+    text-align: center;
+}
+
+h1 {
+    font-weight: lighter;
+}
+
+.logo {
+    background-image: url("./cyclone-logo.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: inline-block;
+    height: 10rem;
+    width: 30rem;
+}
+
+.nav-wrapper {
+    border: 1px #ccc solid;
+    border-width: 1px 0;
+    display: inline-block;
+}
+
+.nav-wrapper a {
+    margin: 1rem auto 1rem auto;
+    background-color: #EEE;
+    text-decoration: none;
+    font-weight: lighter;
+    font-size: 1.5rem;
+    display: block;
+    padding: 1rem;
+    width: 25rem;
+    color: #333;
+}
+
+.nav-wrapper a:hover {
+    background-color: #AAA;
+    color: #000;
+}
+
+.nav-wrapper a:active {
+    background-color: #CCC;
+}

@@ -1,0 +1,55 @@
+.login-pf body {
+    background: #ededed;
+    background: -moz-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #ededed), color-stop(53%, #f6f6f6), color-stop(100%, #ffffff));
+    background: -webkit-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: -o-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: -ms-linear-gradient(top, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    background: linear-gradient(to bottom, #ededed 0%, #f6f6f6 53%, #ffffff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#ffffff', GradientType=0 );
+    color: #555;
+}
+
+label {
+    color: #555;
+}
+
+#kc-content {
+    color: #555;
+}
+
+#client-logo-wrapper {
+    height: 5rem;
+    margin-top: 2rem;
+}
+
+.alert-error {
+    color: #333333 !important;
+}
+
+#kc-header-wrapper {
+    margin-bottom: 0px;
+}
+
+#kc-logo-wrapper {
+    background-image: url("../img/cyclone-logo.png");
+    background-size: contain;
+    height: 100px;
+    width: 300px;
+}
+
+#kc-header {
+    color: #444;
+}
+
+a.zocial {
+    color: #333;
+}
+
+.zocial:hover {
+    color: #000 !important;
+}
+
+.privacy-policy-wrapper {
+    text-transform: uppercase;
+}
