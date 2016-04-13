@@ -26,16 +26,17 @@ RUN apt-get update && apt-get -y install \
  && echo extension=zip.so > $PHP_INI_DIR/conf.d/zip.ini
 
 COPY config/apache2/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY config/php/php.ini /usr/local/etc/php/php.ini
 COPY config/cron/crontab.conf start.sh /var/
 
-ARG commit=294c0363173cb60557909c4acd05ae877002b52e
+ARG commit=6927093deeebe12e96cbb87557d25a15ad96f93c
 
 RUN git clone https://github.com/simplesamlphp/simplesamlphp.git /var/simplesamlphp \
- && a2ensite 000-default   \
- && chmod +x /var/crontab.conf /var/start.sh \
- && crontab /var/crontab.conf     \
- && mkdir /var/simplesamlphp/data \
- && chown -R www-data:www-data /var/simplesamlphp/metadata /var/simplesamlphp/data \
+ && a2ensite 000-default                        \
+ && chmod +x /var/crontab.conf /var/start.sh    \
+ && crontab /var/crontab.conf                   \
+ && mkdir /var/simplesamlphp/data /var/simplesamlphp/log \
+ && chown -R www-data:www-data /var/simplesamlphp/metadata /var/simplesamlphp/data /var/simplesamlphp/log \
  && touch                                       \
   /var/simplesamlphp/modules/cron/enable        \
   /var/simplesamlphp/modules/discopower/enable  \

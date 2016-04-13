@@ -591,7 +591,7 @@ $config = array(
      */
     'metadata.sources' => array(
         array('type' => 'flatfile'),
-        //array('type' => 'serialize', 'directory' => 'metadata/metarefresh'),
+        array('type' => 'serialize', 'directory' => 'metadata/metarefresh-dfnaai-edugain'),
     ),
 
 

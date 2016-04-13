@@ -27,8 +27,8 @@ $metadata['__DYNAMIC:1__'] = array(
 
 	'authproc' => array(
 	    1 => array(
-		'class' => 'saml:PersistentNameID',
-		'attribute' => 'nameid',
+			'class' => 'saml:PersistentNameID',
+			'attribute' => 'nameid',
 	    ),
 	),
 
