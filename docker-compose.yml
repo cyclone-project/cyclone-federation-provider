@@ -4,6 +4,7 @@ keycloak:
     container_name: cyclone-keycloak
     command: -b 0.0.0.0
 #    command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+    restart: unless-stopped
     volumes:
         - ./data/keycloak/exports:/opt/keycloak/exports
     links:
@@ -16,6 +17,7 @@ keycloak:
 keycloakdb:
     image: mongo:2.6
     container_name: cyclone-keycloakdb
+    restart: unless-stopped
     volumes:
         - ./data/keycloak/db:/data/db
     expose:
@@ -24,6 +26,7 @@ keycloakdb:
 samlbridge:
     build: components/samlbridge
     container_name: cyclone-samlbridge
+    restart: unless-stopped
     expose:
         - "80"
     ports:
@@ -33,13 +36,14 @@ samlbridge:
 cacheclean:
     build: components/cache-clean
     container_name: cyclone-cache-clean
+    restart: unless-stopped
     environment:
         - KEYCLOAK_ADMIN_USER=admin
         - KEYCLOAK_ADMIN_PASS=admin
         - KEYCLOAK_ADMIN_CLIENT=admin-cli
         - KEYCLOAK_REALM=master
         - PERIOD=60000
-        - EXCLUDED_USERS=admin;owner
+        - EXCLUDED_USERS=admin;owner;tub;uva;cnrs;guest
     links:
         - keycloakdb
         - keycloak
