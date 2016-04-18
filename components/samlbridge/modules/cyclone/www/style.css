@@ -37,10 +37,10 @@ body {
 }
 
 .inlinesearch {
-    float: right;
-    margin: 0em 3px .5em 1em;
-
-    /*	padding: .3em;*/
+    /*	float: right;
+        margin: 0em 3px .5em 1em;
+    */
+        padding: .3em;
 }
 
 .inlinesearch p {
@@ -68,6 +68,9 @@ div.metalist {
     list-style: none;
     margin: 1em 2px .5em 2px;
     padding: 0px;
+    height: auto;
+    max-height: 385px;
+    overflow-x: hidden;
 }
 
 a.metaentry {

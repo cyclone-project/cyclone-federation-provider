@@ -14,7 +14,7 @@ if (!array_key_exists('header', $this->data)) {
 $this->data['header'] = $this->t($this->data['header']);
 $this->data['jquery'] = array('core' => TRUE, 'ui' => TRUE, 'css' => TRUE);
 
-$this->data['head'] = '<link rel="stylesheet" media="screen" type="text/css" href="' . SimpleSAML_Module::getModuleUrl('discopower/style.css') . '" />';
+$this->data['head'] = '<link rel="stylesheet" media="screen" type="text/css" href="' . SimpleSAML_Module::getModuleUrl('cyclone/style.css') . '" />';
 
 $this->data['head'] .= '<script type="text/javascript" src="' . SimpleSAML_Module::getModuleUrl('discopower/js/jquery.livesearch.js') . '"></script>';
 $this->data['head'] .= '<script type="text/javascript" src="' . SimpleSAML_Module::getModuleUrl('discopower/js/' . $this->data['score'] . '.js') . '"></script>';
@@ -131,20 +131,20 @@ if (!empty($faventry)) {
         </ul>
 
 
-        <div class="row">
+        <div class="container-fluid">
             <?php
             foreach ($this->data['idplist'] AS $tab => $slist) {
 
-                echo '<div id="' . $tab . '">';
+                echo '<div id="' . $tab . ' row">';
 
                 if (!empty($slist)) {
 
-                    echo('	<div class="inlinesearch col-md-4">');
-                    echo('	<p>Search </p>');
-                    echo('	<form id="idpselectform" action="?" method="get"><input class="inlinesearchf" type="text" value="" name="query_' . $tab . '" id="query_' . $tab . '" /></form>');
+                        echo('	<div class="inlinesearch col-sm-3 col-sm-offset-8">');
+                        echo('	<p>Search </p>');
+                        echo('	<form id="idpselectform" action="?" method="get"><input class="inlinesearchf" type="text" value="" name="query_' . $tab . '" id="query_' . $tab . '" /></form>');
+                        echo('	</div>');
                     echo('	</div>');
-                    echo('	</div>');
-                    echo('	<div class="row">');
+                    echo('	<div class="row col-sm-10 col-sm-offset-1">');
 
                     echo('	<div class="metalist" id="list_' . $tab . '">');
                     if (!empty($this->data['preferredidp']) && array_key_exists($this->data['preferredidp'], $slist)) {
