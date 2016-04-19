@@ -32,6 +32,15 @@ body {
 }
 
 /* Copy from Discopower module */
+
+#discotabs {
+    border: none;
+}
+
+#discotabs ul {
+    display: none;
+}
+
 .inlinesearch:hover {
 
 }
@@ -76,9 +85,9 @@ div.metalist {
 a.metaentry {
     display: block;
     border: 1px solid #ccc;
-    margin: 0 0px -1px 0px;
     padding: .2em 1em .2em 20px;
     cursor: hand;
+    margin: 0 1px -1px 0px;
 }
 
 a.metaentry.favourite {
