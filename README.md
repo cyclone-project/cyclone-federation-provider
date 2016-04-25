@@ -5,6 +5,9 @@
 
 Please see the documentation for [Keycloak](http://keycloak.org/docs), [MongoDB](https://docs.mongodb.org/manual/), [SimpleSamlPHP](https://simplesamlphp.org/docs/stable/) and [Docker](http://docs.docker.com/) for more information.
 
+## Provider connection architecture
+![architecture] (https://raw.githubusercontent.com/cyclone-project/cyclone-federation-provider/master/docs/cyclone-diagram.png)
+
 ## Configuration
 Configure Keycloak and SimpleSamlPHP by editing the files in `components/keycloak/config` or `components/samlbridge/config` respectively. 
 
