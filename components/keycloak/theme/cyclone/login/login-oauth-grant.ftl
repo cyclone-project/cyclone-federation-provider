@@ -5,7 +5,7 @@
     <#elseif section = "header">
     ${msg("oauthGrantTitleHtml",(realm.displayNameHtml!''))}<br/><br/>
     <strong><#if client.name??>${advancedMsg(client.name)}<#else>${client.clientId}</#if></strong>.<br/>
-    <img id="client-logo-wrapper" src="${properties.cyLogoBase}/${client.clientId}" alt="<#if client.name??>${client.name}<#else>${client.clientId}</#if> Logo"/>
+    <img id="client-logo-wrapper" src="${properties.cycloneDomain}/assets/images/logo_${client.clientId}.png" alt="<#if client.name??>${client.name}<#else>${client.clientId}</#if> Logo"/>
     <#elseif section = "form">
         <div id="kc-oauth" class="content-area">
             <h3>${msg("oauthGrantRequest")}</h3>
@@ -46,8 +46,8 @@
                 </#if>
             </ul>
 
-            <a class="privacy-policy-wrapper" href="${properties.cyPolicyBase}/${client.clientId}">
-                <#if client.name??>${client.name}<#else>${client.clientId}</#if>'s Privacy Policy
+            <a class="client-terms-wrapper" href="${properties.cycloneDomain}/assets/terms/${client.clientId}">
+                <#if client.name??>${client.name}<#else>${client.clientId}</#if>'s Terms and Conditions
             </a>
 
             <form class="form-actions" action="${url.oauthAction}" method="POST">
