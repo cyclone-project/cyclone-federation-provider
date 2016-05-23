@@ -1,19 +1,22 @@
 FROM java
 
-ENV KEYCLOAK_VERSION=1.8.1.Final \
-    JBOSS_HOME=/opt/keycloak
+ENV KEYCLOAK_VERSION=1.9.4.Final \
+    JBOSS_HOME=/home/cyclone/keycloak
 
-WORKDIR /opt
+RUN useradd -ms /bin/bash cyclone
+USER cyclone
 
-RUN wget http://search.maven.org/remotecontent?filepath=org/keycloak/keycloak-server-dist/$KEYCLOAK_VERSION/keycloak-server-dist-$KEYCLOAK_VERSION.zip -O keycloak.zip \
- && unzip keycloak.zip \
- && rm keycloak.zip \
+WORKDIR /home/cyclone
+
+RUN wget https://downloads.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.zip \
+ && unzip keycloak-$KEYCLOAK_VERSION.zip \
+ && rm keycloak-$KEYCLOAK_VERSION.zip \
  && mv keycloak-$KEYCLOAK_VERSION keycloak
 
-COPY config/keycloak-server.json /opt/keycloak/standalone/configuration/keycloak-server.json
-COPY config/standalone.xml       /opt/keycloak/standalone/configuration/standalone.xml
-COPY theme/cyclone               /opt/keycloak/standalone/configuration/themes/cyclone
+COPY config/keycloak-server.json keycloak/standalone/configuration/keycloak-server.json
+COPY config/standalone.xml       keycloak/standalone/configuration/standalone.xml
+COPY theme/cyclone               keycloak/themes/cyclone
 
-ENTRYPOINT ["/opt/keycloak/bin/standalone.sh"]
+ENTRYPOINT ["keycloak/bin/standalone.sh"]
 
 EXPOSE 8080

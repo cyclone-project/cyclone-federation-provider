@@ -1,6 +1,6 @@
 {
     "providers": [
-        "classpath:${jboss.server.config.dir}/providers/*"
+        "classpath:${jboss.home.dir}/providers/*"
     ],
 
     "admin": {
@@ -22,6 +22,12 @@
         "provider": "mongo"
     },
 
+	"userCache": {
+		"default" : {
+			"enabled": false
+		}
+	},
+
     "userSessionPersister": {
         "provider": "mongo"
     },
@@ -37,7 +43,7 @@
         "cacheTemplates": true,
         "cacheThemes": true,
         "folder": {
-          "dir": "${jboss.server.config.dir}/themes"
+          "dir": "${jboss.home.dir}/themes"
         }
     },
 
@@ -56,11 +62,19 @@
         }
     },
 
+	"realmCache": {
+		"provider": "default",
+		"default": {
+			"enabled": true
+		}
+	},
+
     "connectionsInfinispan": {
         "default" : {
             "cacheContainer" : "java:comp/env/infinispan/Keycloak"
         }
     },
+
     "connectionsMongo": {
         "default": {
             "host": "keycloakdb",
@@ -70,4 +84,5 @@
             "databaseSchema": "update"
         }
     }
+
 }
