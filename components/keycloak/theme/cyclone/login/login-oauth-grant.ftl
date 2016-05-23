@@ -3,10 +3,13 @@
     <#if section = "title">
         ${msg("oauthGrantTitle")}
     <#elseif section = "header">
-    ${msg("oauthGrantTitleHtml",(realm.displayNameHtml!''))}<br/><br/>
-    <strong><#if client.name??>${advancedMsg(client.name)}<#else>${client.clientId}</#if></strong>.<br/>
-    <img id="client-logo-wrapper" src="${properties.cycloneDomain}/assets/images/logo_${client.clientId}.png" alt="<#if client.name??>${client.name}<#else>${client.clientId}</#if> Logo"/>
+    ${msg("oauthGrantTitleHtml",(realm.displayNameHtml!''))}
     <#elseif section = "form">
+        <img id="client-logo-wrapper" src="${properties.cycloneLink}/assets/images/logo_${client.clientId}.png" alt="<#if client.name??>${client.name}<#else>${client.clientId}</#if> Logo"/>
+        <h2 id="cy-client-header">
+            <strong><#if client.name??>${advancedMsg(client.name)}<#else>${client.clientId}</#if></strong>
+        </h2>
+
         <div id="kc-oauth" class="content-area">
             <h3>${msg("oauthGrantRequest")}</h3>
             <ul>
@@ -46,7 +49,7 @@
                 </#if>
             </ul>
 
-            <a class="client-terms-wrapper" href="${properties.cycloneDomain}/assets/terms/${client.clientId}">
+            <a id="client-terms-wrapper" target="_blank" href="${properties.cycloneLink}/terms/${client.clientId}.html">
                 <#if client.name??>${client.name}<#else>${client.clientId}</#if>'s Terms and Conditions
             </a>
 
