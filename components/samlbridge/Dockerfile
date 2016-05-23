@@ -1,13 +1,14 @@
 FROM php:apache
 
-ENV APACHE_LOG_DIR=/var/log/apache2
+ENV APACHE_LOG_DIR=/var/log/apache2 \
+	SSP_VERSION=1.14.3
 
 RUN apt-get update && apt-get -y install \
-    git  	        \
-    wget 	        \
-    re2c 	        \
-    file 	        \
-    cron 	        \
+    git  	      \
+    wget 	      \
+    re2c 	      \
+    file 	      \
+    cron 	      \
     libgmp-dev    \
     libmhash-dev  \
     libmcrypt-dev \
@@ -29,23 +30,21 @@ COPY config/apache2/000-default.conf /etc/apache2/sites-available/000-default.co
 COPY config/php/php.ini /usr/local/etc/php/php.ini
 COPY config/cron/crontab.conf start.sh /var/
 
-ARG commit=6927093deeebe12e96cbb87557d25a15ad96f93c
+WORKDIR /var
 
-RUN git clone https://github.com/simplesamlphp/simplesamlphp.git /var/simplesamlphp \
+RUN mkdir /var/simplesamlphp \
+ && wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v$SSP_VERSION/simplesamlphp-$SSP_VERSION.tar.gz \
+ && tar -xvf simplesamlphp-$SSP_VERSION.tar.gz -C /var/simplesamlphp --strip-components=1 \
+ && rm simplesamlphp-$SSP_VERSION.tar.gz \
  && a2ensite 000-default                        \
  && chmod +x /var/crontab.conf /var/start.sh    \
  && crontab /var/crontab.conf                   \
- && mkdir /var/simplesamlphp/data /var/simplesamlphp/log \
+ && mkdir /var/simplesamlphp/data \
  && chown -R www-data:www-data /var/simplesamlphp/metadata /var/simplesamlphp/data /var/simplesamlphp/log \
  && touch                                       \
   /var/simplesamlphp/modules/cron/enable        \
   /var/simplesamlphp/modules/discopower/enable  \
-  /var/simplesamlphp/modules/metarefresh/enable \
- && cd /var/simplesamlphp                       \
- && git checkout $commit                        \
- && wget https://getcomposer.org/installer      \
- && php installer                               \
- && php composer.phar install
+  /var/simplesamlphp/modules/metarefresh/enable
 
 CMD ["/var/start.sh"]
 

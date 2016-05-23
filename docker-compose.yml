@@ -15,7 +15,7 @@ keycloak:
         - "9080:8080"
 
 keycloakdb:
-    image: mongo:2.6
+    image: mongo:3
     container_name: cyclone-keycloakdb
     restart: unless-stopped
     volumes:
