@@ -138,11 +138,15 @@ if ($onLoad !== '') {
         <!-- Brand -->
         <div class="navbar-header">
             <a class="navbar-brand" href="/<?php echo $this->data['baseurlpath']; ?>">
-                <?php
-                echo(isset($this->data['header']) ? $this->data['header'] : 'SimpleSAMLphp');
-                ?>
+            <img alt="Cyclone" src="<?php echo SimpleSAML_Module::getModuleUrl('cyclone/cyclone-logo.png') ?>">
+
             </a>
         </div>
+        <p class="navbar-text">
+          <?php
+          echo(isset($this->data['header']) ? $this->data['header'] : 'SimpleSAMLphp');
+          ?>
+        </p>
 
 
         <div class="collapse navbar-collapse">
