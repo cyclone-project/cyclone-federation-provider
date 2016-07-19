@@ -591,9 +591,8 @@ $config = array(
      */
     'metadata.sources' => array(
         array('type' => 'flatfile'),
-        array('type' => 'serialize', 'directory' => 'metadata/metarefresh-dfnaai-edugain'),
-    ),
-
+        array('type' => 'flatfile', 'directory' => 'metadata/metarefresh'),
+      ),
 
     /*
      * Configure the datastore for simpleSAMLphp.

@@ -28,12 +28,9 @@ $config = array(
                     ),*/
                 ),
                 'expireAfter' => 60*60*24*3,
-                'outputDir' => 'metadata/metarefresh-dfnaai-edugain/',
-                'outputFormat' => 'serialize',
+                'outputDir' => 'metarefresh-edugain/',
+                'outputFormat' => 'flatfile',
             ),
         ),
 
 );
-
-
-
