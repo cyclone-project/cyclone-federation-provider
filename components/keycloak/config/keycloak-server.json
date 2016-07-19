@@ -32,6 +32,10 @@
         "provider": "mongo"
     },
 
+	"authorizationPersister": {
+		"provider": "mongo"
+	},
+
     "timer": {
         "provider": "basic"
     },
