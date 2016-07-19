@@ -56,6 +56,9 @@
             </form>
         </#if>
     <#elseif section = "info" >
+		<#if client.clientId??>
+			<img id="client-logo-wrapper" src="${properties.cycloneLink}/assets/images/logo_${client.clientId}.png" alt="<#if client.name??>${client.name}<#else>${client.clientId}</#if> Logo"/>
+		</#if>
         <h2 id="cy-info-title">Login with..</h2>
         <#if realm.password && social.providers??>
             <div id="kc-social-providers">
