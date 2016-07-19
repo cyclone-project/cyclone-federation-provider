@@ -2,7 +2,6 @@
 keycloak:
     build: components/keycloak
     container_name: cyclone-keycloak
-    command: -b 0.0.0.0
 #    command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
     restart: unless-stopped
     volumes:
@@ -32,7 +31,6 @@ samlbridge:
     ports:
         - "8080:80"
 
-# Replace with the proper env variables
 cacheclean:
     build: components/cache-clean
     container_name: cyclone-cache-clean
@@ -43,7 +41,15 @@ cacheclean:
         - KEYCLOAK_ADMIN_CLIENT=admin-cli
         - KEYCLOAK_REALM=master
         - PERIOD=60000
-        - EXCLUDED_USERS=admin;owner;tub;uva;cnrs;guest
+        - EXCLUDED_USERS=admin;owner;user;tub;uva;cnrs;guest
     links:
         - keycloakdb
         - keycloak
+
+cron:
+    build: components/cron
+    container_name: cyclone-cron
+    restart: unless-stopped
+    links:
+      - samlbridge
+
