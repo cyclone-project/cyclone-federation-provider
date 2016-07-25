@@ -76,7 +76,7 @@ public class Main {
 
             MongoClient mongoClient = new MongoClient(mongoHost);
 
-            CacheClearTask mClearTask = new CacheClearTask(mongoClient, keycloakClient, excludedUsers);
+            CacheClearTask mClearTask = new CacheClearTask(mongoClient, keycloakClient, excludedUsers, realm);
             // This task is scheduled to run every 60 seconds
 
             t.scheduleAtFixedRate(mClearTask, 0, period);

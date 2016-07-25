@@ -14,14 +14,16 @@ public class CacheClearTask extends TimerTask {
     private MongoClient mongoClient;
     private Keycloak keycloakClient;
     private List<String> excludedUsers;
+    private String realm;
     private MongoCollection<Document> usersCollection;
     private ArrayList<Document> usersList = new ArrayList<Document>();
     private ArrayList<String> expiredUsers = new ArrayList<String>();
 
-    public CacheClearTask(MongoClient mongoClient, Keycloak keycloakClient, List<String> excludedUsers) {
+    public CacheClearTask(MongoClient mongoClient, Keycloak keycloakClient, List<String> excludedUsers, String realm) {
         this.mongoClient = mongoClient;
         this.keycloakClient = keycloakClient;
         this.excludedUsers = excludedUsers;
+        this.realm = realm;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class CacheClearTask extends TimerTask {
     }
 
     private void getUsersList() {
-        usersList = usersCollection.find().into(new ArrayList<Document>());
+        usersList = usersCollection.find(new Document("realmId", this.realm)).into(new ArrayList<Document>());
     }
 
     private void checkUserSession() {
