@@ -30,8 +30,8 @@ public class Main {
             adminPass = System.getenv("KEYCLOAK_ADMIN_PASS");
             adminClient = System.getenv("KEYCLOAK_ADMIN_CLIENT");
             realm = System.getenv("KEYCLOAK_REALM");
-            keycloakHost = "http://" + System.getenv("KEYCLOAK_PORT_8080_TCP_ADDR") + ":8080/auth";
-            mongoHost = System.getenv("KEYCLOAKDB_PORT_27017_TCP_ADDR");
+            keycloakHost = "http://keycloak:8080/auth";
+            mongoHost = "keycloakdb";
             period = Integer.parseInt(System.getenv("PERIOD"));
             if (period == 0) {
                 period = 60000;

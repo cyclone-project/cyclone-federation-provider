@@ -1,55 +1,62 @@
+version: '2'
 
-keycloak:
-    build: components/keycloak
-    container_name: cyclone-keycloak
-#    command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
-    restart: unless-stopped
-    volumes:
+services:
+
+  keycloak:
+      build: ./components/keycloak
+      image: cyclonefp/keycloak
+      #command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+      restart: unless-stopped
+      volumes:
         - ./data/keycloak/exports:/opt/keycloak/exports
-    links:
+      links:
         - keycloakdb
-    expose:
+      expose:
         - "8080"
-    ports:
+      ports:
         - "9080:8080"
 
-keycloakdb:
-    image: mongo:3
-    container_name: cyclone-keycloakdb
-    restart: unless-stopped
-    volumes:
+  keycloakdb:
+      image: mongo:3
+      restart: unless-stopped
+      volumes:
         - ./data/keycloak/db:/data/db
-    expose:
+      expose:
         - "27017"
 
-samlbridge:
-    build: components/samlbridge
-    container_name: cyclone-samlbridge
-    restart: unless-stopped
-    expose:
+  samlbridge:
+      build: ./components/samlbridge
+      image: cyclonefp/samlbridge
+      restart: unless-stopped
+      #environment:
+      #  - SSP_BASEURL=samlbridge/
+      #  - SSP_PASSWORD=admin
+      #  - SSP_SALT=defaultsalt
+      #  - SSP_CONTACTNAME=
+      #  - SSP_CONTACTEMAIL=
+      expose:
         - "80"
-    ports:
+      ports:
         - "8080:80"
 
-cacheclean:
-    build: components/cache-clean
-    container_name: cyclone-cache-clean
-    restart: unless-stopped
-    environment:
+  cacheclean:
+      build: ./components/cache-clean
+      image: cyclonefp/cacheclean
+      restart: unless-stopped
+      environment:
         - KEYCLOAK_ADMIN_USER=admin
         - KEYCLOAK_ADMIN_PASS=admin
         - KEYCLOAK_ADMIN_CLIENT=admin-cli
         - KEYCLOAK_REALM=master
         - PERIOD=60000
         - EXCLUDED_USERS=admin;owner;user;tub;uva;cnrs;guest
-    links:
+      links:
         - keycloakdb
         - keycloak
 
-cron:
-    build: components/cron
-    container_name: cyclone-cron
-    restart: unless-stopped
-    links:
-      - samlbridge
-
+  cron:
+      build: ./components/cron
+      image: cyclonefp/cron
+      restart: unless-stopped
+      links:
+        - samlbridge
