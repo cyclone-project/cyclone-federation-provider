@@ -25,13 +25,6 @@ $metadata['__DYNAMIC:1__'] = array(
 
 	'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
 
-	'authproc' => array(
-	    1 => array(
-			'class' => 'saml:PersistentNameID',
-			'attribute' => 'nameid',
-	    ),
-	),
-
 	/*
 	 * WARNING: SHA-1 is disallowed starting January the 1st, 2014.
 	 *

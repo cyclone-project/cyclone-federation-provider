@@ -16,10 +16,6 @@ $config = array(
     'cyclone-saml-bridge' => array(
         'saml:SP',
 
-	'authproc' => array(
-	    20 => 'saml:NameIDAttribute',
-	),
-
         // The entity ID of this SP.
         // Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
         'entityID' => null,
@@ -42,6 +38,7 @@ $config = array(
         'validate.logout' => true,
 
         'attributes' => array(
+            'eduPersonUniqueID' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.13',
             'eduPersonTargetedID' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
             'eduPersonPrincipalName' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
             'displayName' => 'urn:oid:2.16.840.1.113730.3.1.241',
@@ -54,8 +51,9 @@ $config = array(
         ),
 
         'attributes.required' => array(
+            'urn:oid:1.3.6.1.4.1.5923.1.1.1.13',        // eduPersonUniqueID
             'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',        // eduPersonTargetedID
-            'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',         // eduPersonPrincipalNa$
+            'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',         // eduPersonPrincipalName
             'urn:oid:2.16.840.1.113730.3.1.241',        // displayName
             'urn:oid:2.5.4.3',                          // cn commonName
             'urn:oid:0.9.2342.19200300.100.1.3',        // mail

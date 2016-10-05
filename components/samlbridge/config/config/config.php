@@ -21,7 +21,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => 'samlbridge/',
+    'baseurlpath' => getenv('SSP_BASEURL') ?: 'samlbridge/',
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
@@ -75,7 +75,7 @@ $config = array(
      * metadata listing and diagnostics pages.
      * You can also put a hash here; run "bin/pwgen.php" to generate one.
      */
-    'auth.adminpassword' => '123',
+    'auth.adminpassword' => getenv('SSP_PASSWORD') ?: '123',
     'admin.protectindexpage' => true,
     'admin.protectmetadata' => false,
 
@@ -87,15 +87,15 @@ $config = array(
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
      */
-    'secretsalt' => 'secretsaltvalue',
+    'secretsalt' => getenv('SSP_SALT') ?: 'defaultsecretsalt',
 
     /*
      * Some information about the technical persons running this installation.
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name' => '',
-    'technicalcontact_email' => '',
+    'technicalcontact_name' => getenv('SSP_CONTACTNAME') ?: '',
+    'technicalcontact_email' => getenv('SSP_CONTACTEMAIL') ?: '',
 
     /*
      * The timezone of the server. This option should be set to the timezone you want
@@ -121,8 +121,8 @@ $config = array(
      * Options: [syslog,file,errorlog]
      *
      */
-    'logging.level' => SimpleSAML_Logger::NOTICE,
-    'logging.handler' => 'syslog',
+    'logging.level' => SimpleSAML_Logger::INFO,
+    'logging.handler' => 'errorlog',
 
     /*
      * Specify the format of the logs. Its use varies depending on the log handler used (for instance, you cannot
@@ -180,13 +180,14 @@ $config = array(
      * This is an array of outputs. Each output has at least a 'class' option, which
      * selects the output.
      */
-    'statistics.out' => array(// Log statistics to the normal log.
-        /*
+    'statistics.out' => array(
+        // Log statistics to the normal log.
+
         array(
             'class' => 'core:Log',
             'level' => 'notice',
         ),
-        */
+
         // Log statistics to files in a directory. One file per day.
         /*
         array(
@@ -229,6 +230,12 @@ $config = array(
      *
      */
 
+      'module.enable' => array(
+        'cron' => TRUE,
+        'discopower' => TRUE,
+        'metarefresh' => TRUE,
+        'smartattributes' => TRUE,
+      ),
 
     /*
      * This value is the duration of the session in seconds. Make sure that the time duration of
@@ -462,56 +469,57 @@ $config = array(
      * Both Shibboleth and SAML 2.0
      */
     'authproc.idp' => array(
-        /* Enable the authproc filter below to add URN Prefixces to all attributes
-         10 => array(
-             'class' => 'core:AttributeMap', 'addurnprefix'
-         ), */
-        /* Enable the authproc filter below to automatically generated eduPersonTargetedID.
-        20 => 'core:TargetedID',
-        */
 
         // Adopts language from attribute to use in UI
         30 => 'core:LanguageAdaptor',
 
-        /* Add a realm attribute from edupersonprincipalname
-        40 => 'core:AttributeRealm',
-         */
         45 => array(
             'class'         => 'core:StatisticsWithAttribute',
             'attributename' => 'realm',
             'type'          => 'saml20-idp-SSO',
         ),
 
-        /* When called without parameters, it will fallback to filter attributes ‹the old way›
-         * by checking the 'attributes' parameter in metadata on IdP hosted and SP remote.
-         */
-        //50 => 'core:AttributeLimit',
+        // filter eduPersonTargetedID, convert to string
+        50 => array(
+            'class' => 'core:PHP',
+            'code' => '
+                $eptid = $attributes["eduPersonTargetedID"];
+                if (empty($eptid) || !($eptid[0] instanceof DOMNodeList)) {
+                    return;
+                }
+                $value = "";
+                $node = $eptid[0]->item(0);
+                if (!empty($node->attributes->getNamedItem("NameQualifier"))) {
+                    $value .= $node->attributes->getNamedItem("NameQualifier")->value . "!";
+                }
+                if (!empty($node->attributes->getNamedItem("SPNameQualifier"))) {
+                    $value .= $node->attributes->getNamedItem("SPNameQualifier")->value . "!";
+                }
+                $value .= $node->nodeValue;
+                $attributes["eduPersonTargetedID"] = array($value);
+            ',
+        ),
 
-        /*
-         * Search attribute "distinguishedName" for pattern and replaces if found
-
+        // choose an id smartly from a list of candidates
         60 => array(
-            'class' => 'core:AttributeAlter',
-            'pattern' => '/OU=studerende/',
-            'replacement' => 'Student',
-            'subject' => 'distinguishedName',
-            '%replace',
+            'class' => 'smartattributes:SmartID',
+            'candidates' => array('eduPersonUniqueID', 'eduPersonTargetedID', 'eduPersonPrincipalName', 'mail'),
+            'id_attribute' => 'smart_id',
+            'add_authority' => true,
+            'add_candidate' => false
         ),
-         */
 
-        /*
-         * Consent module is enabled (with no permanent storage, using cookies).
-
-        90 => array(
-            'class' => 'consent:Consent',
-            'store' => 'consent:Cookie',
-            'focus' => 'yes',
-            'checked' => TRUE
+        // use smart_id as nameid
+        70 => array(
+           'class' => 'saml:AttributeNameID',
+           'Format' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+           'attribute' => 'smart_id',
         ),
-         */
+
         // If language is set in Consent module it will be added as an attribute.
         99 => 'core:LanguageAdaptor',
     ),
+
     /*
      * Authentication processing filters that will be executed for all SPs
      * Both Shibboleth and SAML 2.0
