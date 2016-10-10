@@ -13,9 +13,9 @@ RUN apt-get update && apt-get -y install wget libgmp-dev libmcrypt-dev zlib1g-de
  && docker-php-ext-install mcrypt    \
  && docker-php-ext-install zip       \
  && wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v$SSP_VERSION/simplesamlphp-$SSP_VERSION.tar.gz \
- && mkdir -p $SSP_DIR $SSP_DIR/metarefresh-edugain $SSP_DIR/metadata/metarefresh \
+ && mkdir -p $SSP_DIR $SSP_DIR/data $SSP_DIR/metarefresh-edugain $SSP_DIR/metadata/metarefresh \
  && tar -xvf simplesamlphp-$SSP_VERSION.tar.gz -C $SSP_DIR --strip-components=1 \
- && chown -R www-data:www-data $SSP_DIR/metadata \
+ && chown -R www-data:www-data $SSP_DIR/data $SSP_DIR/metadata \
  && rm $SSP_DIR/metadata/*.php        \
  && touch                                       \
   $SSP_DIR/metarefresh-edugain/saml20-idp-remote.php \
