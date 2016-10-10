@@ -11,10 +11,6 @@ services:
         - ./data/keycloak/exports:/opt/keycloak/exports
       links:
         - keycloakdb
-      expose:
-        - "8080"
-      ports:
-        - "9080:8080"
 
   keycloakdb:
       image: mongo:3
@@ -34,10 +30,6 @@ services:
       #  - SSP_SALT=defaultsalt
       #  - SSP_CONTACTNAME=
       #  - SSP_CONTACTEMAIL=
-      expose:
-        - "80"
-      ports:
-        - "8080:80"
 
   cacheclean:
       build: ./components/cache-clean
