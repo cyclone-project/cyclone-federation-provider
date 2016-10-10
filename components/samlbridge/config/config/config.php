@@ -503,7 +503,7 @@ $config = array(
         // choose an id smartly from a list of candidates
         60 => array(
             'class' => 'smartattributes:SmartID',
-            'candidates' => array('eduPersonUniqueID', 'eduPersonTargetedID', 'eduPersonPrincipalName', 'mail'),
+            'candidates' => array('eduPersonUniqueID', 'urn:oid:1.3.6.1.4.1.5923.1.1.1.13', 'eduPersonTargetedID', 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10', 'eduPersonPrincipalName', 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6', 'mail', 'urn:oid:0.9.2342.19200300.100.1.3'),
             'id_attribute' => 'smart_id',
             'add_authority' => true,
             'add_candidate' => false
