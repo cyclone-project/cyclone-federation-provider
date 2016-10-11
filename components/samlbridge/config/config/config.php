@@ -483,7 +483,15 @@ $config = array(
         50 => array(
             'class' => 'core:PHP',
             'code' => '
-                $eptid = $attributes["eduPersonTargetedID"];
+                $eptid;
+                $attributeName;
+                if ($attributes["eduPersonTargetedID"]) {
+                    $attributeName = "eduPersonTargetedID";
+                    $eptid = $attributes["eduPersonTargetedID"];
+                } else if ($attributes["urn:oid:1.3.6.1.4.1.5923.1.1.1.10"]) {
+                    $attributeName = "urn:oid:1.3.6.1.4.1.5923.1.1.1.10";
+                    $eptid = $attributes["urn:oid:1.3.6.1.4.1.5923.1.1.1.10"];
+                }
                 if (empty($eptid) || !($eptid[0] instanceof DOMNodeList)) {
                     return;
                 }
@@ -496,7 +504,7 @@ $config = array(
                     $value .= $node->attributes->getNamedItem("SPNameQualifier")->value . "!";
                 }
                 $value .= $node->nodeValue;
-                $attributes["eduPersonTargetedID"] = array($value);
+                $attributes[$attributeName] = array($value);
             ',
         ),
 
