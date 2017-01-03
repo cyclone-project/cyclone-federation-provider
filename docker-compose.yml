@@ -31,20 +31,6 @@ services:
       #  - SSP_CONTACTNAME=
       #  - SSP_CONTACTEMAIL=
 
-  cacheclean:
-      build: ./components/cache-clean
-      image: cyclonefp/cacheclean
-      restart: unless-stopped
-      environment:
-        - KEYCLOAK_ADMIN_USER=admin
-        - KEYCLOAK_ADMIN_PASS=admin
-        - KEYCLOAK_ADMIN_CLIENT=admin-cli
-        - KEYCLOAK_REALM=master
-        - PERIOD=60000
-        - EXCLUDED_USERS=admin;owner;user;tub;uva;cnrs;guest
-      links:
-        - keycloakdb
-        - keycloak
 
   cron:
       build: ./components/cron
