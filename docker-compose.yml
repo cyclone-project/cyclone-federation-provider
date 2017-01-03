@@ -1,40 +1,27 @@
 version: '2'
 
+# Base Compose File for the Cyclone Federation Provider
+
 services:
 
   keycloak:
       build: ./components/keycloak
-      image: cyclonefp/keycloak
-      #command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
       restart: unless-stopped
-      volumes:
-        - ./data/keycloak/exports:/opt/keycloak/exports
       links:
         - keycloakdb
 
   keycloakdb:
-      image: mongo:3
+      image: postgres:alpine
       restart: unless-stopped
-      volumes:
-        - ./data/keycloak/db:/data/db
       expose:
-        - "27017"
+        - "5432"
 
   samlbridge:
       build: ./components/samlbridge
-      image: cyclonefp/samlbridge
       restart: unless-stopped
-      #environment:
-      #  - SSP_BASEURL=samlbridge/
-      #  - SSP_PASSWORD=admin
-      #  - SSP_SALT=defaultsalt
-      #  - SSP_CONTACTNAME=
-      #  - SSP_CONTACTEMAIL=
-
 
   cron:
       build: ./components/cron
-      image: cyclonefp/cron
       restart: unless-stopped
       links:
         - samlbridge

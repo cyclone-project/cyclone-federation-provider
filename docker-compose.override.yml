@@ -1,19 +1,85 @@
 version: '2'
 
+# Deploys a demo environment for the Cyclone Federation Provider
+# complete with all tools + a samlidp.
+
 services:
 
   keycloak:
+    command: -b 0.0.0.0
+    environment:
+      - KEYCLOAK_REALM
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - ./components/keycloak/theme/cyclone:/opt/jboss/keycloak/themes/cyclone
     expose:
       - "8080"
     ports:
       - "9080:8080"
 
+  keycloakdb:
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - ./data/keycloak/db:/var/lib/postgresql/data
+
   samlbridge:
+    environment:
+      - SSP_BASEURL
+      - SSP_PASSWORD
+      - SSP_SALT
+      - SSP_CONTACTNAME
+      - SSP_CONTACTEMAIL
+    volumes:
+      - ./components/samlbridge/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./components/samlbridge/mpm_prefork.conf:/etc/apache2/mods-available/mpm_prefork.conf
+      - ./components/samlbridge/php.ini:/usr/local/etc/php/php.ini
+      - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
+      - ./components/samlbridge/samlbridge-config:/var/simplesamlphp/config
+      - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
+      - ./components/samlbridge/saml20-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
+      - ./demo/samlbridge-idp-remote.php:/var/simplesamlphp/metadata/saml20-idp-remote.php
+      - ./demo/samlbridge-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
     expose:
       - "80"
     ports:
       - "8080:80"
 
+  samlidp:
+    extends:
+      file: docker-compose.yml
+      service: samlbridge
+    restart: unless-stopped
+    environment:
+      - SSP_BASEURL=samlidp
+      - SSP_PASSWORD=admin
+      - SSP_SALT=defaultsalt
+      - SSP_CONTACTNAME=
+      - SSP_CONTACTEMAIL=
+    volumes:
+      - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
+      - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
+      - ./demo/samlidp-config.php:/var/simplesamlphp/config/config.php
+      - ./demo/samlidp-authsources.php:/var/simplesamlphp/config/authsources.php
+      - ./demo/samlidp-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
+      - ./demo/samlidp-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
+      - ./demo/samlidp-000-default.conf:/etc/apache2/sites-available/000-default.conf
+    expose:
+      - "80"
+    ports:
+      - "8081:80"
+
   cron:
+    environment:
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - KEYCLOAK_URL
+      - EXCLUDED_USERS
     volumes:
       - ./components/cron/periodic:/etc/periodic
+    links:
+      - keycloak
