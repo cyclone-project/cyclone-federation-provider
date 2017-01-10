@@ -21,7 +21,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => (getenv('SSP_BASEURL') ?: 'samlbridge') . '/',
+    'baseurlpath' => (getenv('SAMLIDP_URL') ?: 'samlidp') . '/',
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
@@ -75,7 +75,7 @@ $config = array(
      * metadata listing and diagnostics pages.
      * You can also put a hash here; run "bin/pwgen.php" to generate one.
      */
-    'auth.adminpassword' => getenv('SSP_PASSWORD') ?: '123',
+    'auth.adminpassword' => getenv('SAMLIDP_PASSWORD') ?: '123',
     'admin.protectindexpage' => true,
     'admin.protectmetadata' => false,
 
@@ -87,15 +87,15 @@ $config = array(
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
      */
-    'secretsalt' => getenv('SSP_SALT') ?: 'defaultsecretsalt',
+    'secretsalt' => getenv('SAMLIDP_SALT') ?: 'defaultsecretsalt',
 
     /*
      * Some information about the technical persons running this installation.
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name' => getenv('SSP_CONTACTNAME') ?: '',
-    'technicalcontact_email' => getenv('SSP_CONTACTEMAIL') ?: '',
+    'technicalcontact_name' => getenv('SAMLIDP_CONTACTNAME') ?: '',
+    'technicalcontact_email' => getenv('SAMLIDP_CONTACTEMAIL') ?: '',
 
     /*
      * The timezone of the server. This option should be set to the timezone you want
@@ -231,10 +231,6 @@ $config = array(
      */
 
       'module.enable' => array(
-        'cron' => TRUE,
-        'discopower' => TRUE,
-        'metarefresh' => TRUE,
-        'smartattributes' => TRUE,
         'authcrypt' => TRUE,
       ),
 
@@ -259,7 +255,7 @@ $config = array(
     /*
      * Option to override the default settings for the session cookie name
      */
-    'session.cookie.name' => 'SimpleSAMLSessionID',
+    'session.cookie.name' => 'SAMLIDPSessionID',
 
     /*
      * Expiration time for the session cookie, in seconds.
@@ -322,7 +318,7 @@ $config = array(
     /*
      * Options to override the default settings for php sessions.
      */
-    'session.phpsession.cookiename' => null,
+    'session.phpsession.cookiename' => 'SAMLIDPPHPSESSID',
     'session.phpsession.savepath' => null,
     'session.phpsession.httponly' => false,
 
@@ -553,7 +549,6 @@ $config = array(
      */
     'metadata.sources' => array(
         array('type' => 'flatfile'),
-        array('type' => 'flatfile', 'directory' => 'metadata/metarefresh'),
       ),
 
     /*

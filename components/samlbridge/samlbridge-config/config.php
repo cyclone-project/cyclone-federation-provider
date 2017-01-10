@@ -21,7 +21,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => (getenv('SSP_BASEURL') ?: 'samlbridge') . '/',
+    'baseurlpath' => (getenv('SAMLBRIDGE_URL') ?: 'samlbridge') . '/',
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
@@ -75,7 +75,7 @@ $config = array(
      * metadata listing and diagnostics pages.
      * You can also put a hash here; run "bin/pwgen.php" to generate one.
      */
-    'auth.adminpassword' => getenv('SSP_PASSWORD') ?: '123',
+    'auth.adminpassword' => getenv('SAMLBRIDGE_PASSWORD') ?: '123',
     'admin.protectindexpage' => true,
     'admin.protectmetadata' => false,
 
@@ -87,15 +87,15 @@ $config = array(
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
      */
-    'secretsalt' => getenv('SSP_SALT') ?: 'defaultsecretsalt',
+    'secretsalt' => getenv('SAMLBRIDGE_SALT') ?: 'defaultsecretsalt',
 
     /*
      * Some information about the technical persons running this installation.
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name' => getenv('SSP_CONTACTNAME') ?: '',
-    'technicalcontact_email' => getenv('SSP_CONTACTEMAIL') ?: '',
+    'technicalcontact_name' => getenv('SAMLBRIDGE_CONTACTNAME') ?: '',
+    'technicalcontact_email' => getenv('SAMLBRIDGE_CONTACTEMAIL') ?: '',
 
     /*
      * The timezone of the server. This option should be set to the timezone you want

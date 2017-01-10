@@ -26,7 +26,7 @@ $config = array(
 
         // The URL to the discovery service.
         // Can be NULL/unset, in which case a builtin discovery service will be used.
-        'discoURL' => 'http://localhost:8080/samlbridge/module.php/discopower/disco.php',
+        'discoURL' => (getenv('SAMLBRIDGE_URL') ?: 'samlbridge') . '/module.php/discopower/disco.php',
 
         'privatekey' => 'server.pem',
         'certificate' => 'server.crt',

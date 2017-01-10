@@ -2,9 +2,6 @@ FROM php:apache
 
 ENV SSP_VERSION=1.14.11
 
-EXPOSE 80
-EXPOSE 443
-
 RUN apt-get update && apt-get -y install wget libgmp-dev libmcrypt-dev zlib1g-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/* \
  && ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/ \
@@ -27,6 +24,8 @@ RUN mkdir -p data metarefresh-edugain metadata/metarefresh &&\
   ln -s /var/simplesamlphp/metarefresh-edugain/attributeauthority-remote.php metadata/metarefresh/attributeauthority-remote.php &&\
   chown -R www-data:www-data data metadata &&\
   chown -R www-data:www-data metarefresh-edugain
+
+EXPOSE 80
 
 CMD ["apache2-foreground"]
 
