@@ -4,24 +4,83 @@ version: '2'
 
 services:
 
+  proxy:
+    image: traefik
+    command: --web --docker --docker.exposedByDefault=false --loglevel=info
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev/null:/traefik.toml
+    ports:
+        - "80:80"
+        - "8080:8080"
+        #- "443:443"
+
   keycloak:
-      build: ./components/keycloak
-      restart: unless-stopped
-      links:
-        - keycloakdb
+    build: ./components/keycloak
+    restart: unless-stopped
+    command: -b 0.0.0.0
+    environment:
+      - KEYCLOAK_REALM
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=keycloak"
+      - "traefik.frontend.rule=PathPrefix:/auth"
+    volumes:
+      - ./components/keycloak/theme/cyclone:/opt/jboss/keycloak/themes/cyclone
+    depends_on:
+      - keycloakdb
+    expose:
+      - "8080"
 
   keycloakdb:
-      image: postgres:alpine
-      restart: unless-stopped
-      expose:
-        - "5432"
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - ./data/keycloak/db:/var/lib/postgresql/data
+    expose:
+      - "5432"
 
   samlbridge:
-      build: ./components/samlbridge
-      restart: unless-stopped
+    build: ./components/samlbridge
+    restart: unless-stopped
+    environment:
+      - KEYCLOAK_URL
+      - SAMLBRIDGE_URL
+      - SAMLBRIDGE_PASSWORD
+      - SAMLBRIDGE_SALT
+      - SAMLBRIDGE_CONTACTNAME
+      - SAMLBRIDGE_CONTACTEMAIL
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=samlbridge"
+      - "traefik.frontend.rule=PathPrefix:/samlbridge"
+    volumes:
+      - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
+      - ./components/samlbridge/samlbridge-config:/var/simplesamlphp/config
+      - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
+      - ./components/samlbridge/saml20-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
+      - ./components/samlbridge/saml20-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
+      - ./components/samlbridge/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    expose:
+      - "80"
 
   cron:
-      build: ./components/cron
-      restart: unless-stopped
-      links:
-        - samlbridge
+    build: ./components/cron
+    restart: unless-stopped
+    environment:
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - EXCLUDED_USERS
+    volumes:
+      - ./components/cron/periodic:/etc/periodic
+    depends_on:
+      - keycloak
+      - samlbridge
+

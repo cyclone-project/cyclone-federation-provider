@@ -1,12 +1,12 @@
 #!/bin/sh
 
-KEYCLOAK_REALM=${KEYCLOAK_REALM:=master}
-KEYCLOAK_URL=$KEYCLOAK_URL
+KC_REALM=${KEYCLOAK_REALM:=master}
+KC_URL=http://keycloak:8080/auth
 EXCLUDE_USERS=$EXCLUDED_USERS
 
 # log in to keycloak
 kc_login() {
-	curl -s -X POST "$KEYCLOAK_URL/realms/$KEYCLOAK_REALM/protocol/openid-connect/token" \
+	curl -s -X POST "$KC_URL/realms/$KC_REALM/protocol/openid-connect/token" \
 	  -H "Content-Type: application/x-www-form-urlencoded" \
 	  -d "username=$KEYCLOAK_USER" \
 	  -d "password=$KEYCLOAK_PASSWORD" \
@@ -16,7 +16,7 @@ kc_login() {
 
 # log out of keycloak
 kc_logout() {
-	curl -s -X POST "$KEYCLOAK_URL/realms/$KEYCLOAK_REALM/protocol/openid-connect/logout" \
+	curl -s -X POST "$KC_URL/realms/$KC_REALM/protocol/openid-connect/logout" \
 		 -H "Authorization: Bearer $AC_TKN" \
 		 -H "Content-Type: application/x-www-form-urlencoded" \
 		 -d "username=$KEYCLOAK_USER" \
@@ -26,14 +26,14 @@ kc_logout() {
 
 # retrieve id and username of every user
 kc_users() {
-	curl -s -X GET "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/users" \
+	curl -s -X GET "$KC_URL/admin/realms/$KC_REALM/users" \
 		 -H "Accept: application/json" \
 		 -H "Authorization: Bearer $AC_TKN" | jq 'map({id: .id, username: .username})'
 }
 
 # retrieve ids of every client
 kc_clients() {
-	curl -s -X GET "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/clients" \
+	curl -s -X GET "$KC_URL/admin/realms/$KC_REALM/clients" \
 		 -H "Accept: application/json" \
 		 -H "Authorization: Bearer $AC_TKN" | jq -r '.[]|.id'
 }
@@ -42,10 +42,10 @@ kc_clients() {
 # param: id of a keycloak client (NOT clientId)
 kc_sessionusers() {
 	clientid=$1
-	actv=$(curl -s -X GET "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/clients/$clientid/user-sessions" \
+	actv=$(curl -s -X GET "$KC_URL/admin/realms/$KC_REALM/clients/$clientid/user-sessions" \
 				  -H "Accept: application/json" \
 				  -H "Authorization: Bearer $AC_TKN" | jq 'map({id: .userId, username: .username})')
-	offl=$(curl -s -X GET "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/clients/$clientid/offline-sessions" \
+	offl=$(curl -s -X GET "$KC_URL/admin/realms/$KC_REALM/clients/$clientid/offline-sessions" \
 				  -H "Accept: application/json" \
 				  -H "Authorization: Bearer $AC_TKN" | jq 'map({id: .userId, username: .username})')
 	echo "[$actv,$offl]" | jq '.[0] + .[1] | unique'
@@ -53,7 +53,7 @@ kc_sessionusers() {
 
 kc_deleteuser() {
 	userid=$1
-	curl -s -X DELETE "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/users/$userid" \
+	curl -s -X DELETE "$KC_URL/admin/realms/$KC_REALM/users/$userid" \
 		 -H "Authorization: Bearer $AC_TKN"
 }
 
