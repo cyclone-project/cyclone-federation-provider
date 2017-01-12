@@ -22,11 +22,11 @@ services:
       - "traefik.frontend.rule=PathPrefix:/samlidp"
     environment:
       - SAMLBRIDGE_URL
-      - SAMLIDP_URL=http://localhost/samlidp
-      - SAMLIDP_PASSWORD=admin
-      - SAMLIDP_SALT=defaultsalt
-      - SAMLIDP_CONTACTNAME=
-      - SAMLIDP_CONTACTEMAIL=
+      - SAMLIDP_URL
+      - SAMLIDP_PASSWORD
+      - SAMLIDP_SALT
+      - SAMLIDP_CONTACTNAME
+      - SAMLIDP_CONTACTEMAIL
     volumes:
       - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
       - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
