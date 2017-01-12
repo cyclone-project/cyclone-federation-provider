@@ -10,6 +10,7 @@ KC_URL=${KEYCLOAK_URL:=http://localhost:8080/auth}
 KC_REALM=${KEYCLOAK_REALM:=master}
 SSP_URL=${SAMLBRIDGE_URL}
 CY_TEMPLATE="cy-client-template.json"
+CY_CLIENT=
 CY_ACTION=0
 
 
@@ -119,6 +120,16 @@ kc_reg_cyclient_template() {
 	     -d @$clienttemplate
 }
 
+kc_reg_cyclient() {
+	curl -v -X POST "$KC_URL/admin/realms/$KC_REALM/clients" \
+	     -H "Accept: application/json" \
+	     -H "Authorization: Bearer $AC_TKN" \
+	     -H "Content-Type: application/json" \
+	     -d @- <<EOF
+$CY_CLIENT
+EOF
+}
+
 ##### Main
 
 while [ "$1" != "" ]; do
@@ -135,7 +146,7 @@ while [ "$1" != "" ]; do
 		-r | --realm )       shift
 		                     KC_REALM=$1
 		                     ;;
-		-s | --samlbridge)   shift
+		-s | --samlbridge )  shift
 		                     SSP_URL=$1
 		                     ;;
 		-f | --file )        shift
@@ -144,10 +155,15 @@ while [ "$1" != "" ]; do
 		-h | --help )        usage
 		                     exit 0
 		                     ;;
-		reg-samlbridge)      CY_ACTION=1
+		reg-samlbridge )     CY_ACTION=1
 		                     break
 		                     ;;
-		reg-clienttemplate)  CY_ACTION=2
+		reg-clienttemplate ) CY_ACTION=2
+		                     break
+		                     ;;
+		reg-client )         shift
+		                     CY_CLIENT=$1
+		                     CY_ACTION=3
 		                     break
 		                     ;;
 		* )                  usage
@@ -161,12 +177,20 @@ AC_TKN=$(echo "$response" | jq -r '.access_token')
 ID_TKN=$(echo "$response" | jq -r '.id_token')
 RF_TKN=$(echo "$response" | jq -r '.refresh_token')
 
+if [ $CY_ACTION == 0 ]; then
+	usage
+fi
+
 if [ $CY_ACTION == 1 ]; then
 	kc_reg_idp
 fi
 
 if [ $CY_ACTION == 2 ]; then
 	kc_reg_cyclient_template $CY_TEMPLATE
+fi
+
+if [ $CY_ACTION == 3 ]; then
+	kc_reg_cyclient
 fi
 
 kc_logout

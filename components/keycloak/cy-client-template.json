@@ -1,9 +1,9 @@
 {
-"name": "Cyclone Template",
-"description": "Cyclone Client Template",
-"protocol": "openid-connect",
-"fullScopeAllowed": true,
-"protocolMappers": [
+  "name": "Cyclone Template",
+  "description": "Cyclone Client Template",
+  "protocol": "openid-connect",
+  "fullScopeAllowed": true,
+  "protocolMappers": [
     {
       "name": "displayName",
       "protocol": "openid-connect",
