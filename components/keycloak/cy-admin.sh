@@ -11,6 +11,7 @@ KC_REALM=${KEYCLOAK_REALM:=master}
 SSP_URL=${SAMLBRIDGE_URL}
 CY_TEMPLATE="cy-client-template.json"
 CY_CLIENT=
+CY_REALM=
 CY_ACTION=0
 
 
@@ -43,6 +44,16 @@ kc_logout() {
 	     -d "username=$KC_USER" \
 	     -d "client_id=admin-cli" \
 	     -d "refresh_token=$RF_TKN"
+}
+
+kc_update_realm() {
+	curl -s -X PUT "$KC_URL/admin/realms/$KC_REALM" \
+	     -H "Accept: application/json" \
+	     -H "Authorization: Bearer $AC_TKN" \
+	     -H "Content-Type: application/json" \
+	     -d @- <<EOF
+$CY_REALM
+EOF
 }
 
 # register samlbridge and its mappers
@@ -121,7 +132,7 @@ kc_reg_cyclient_template() {
 }
 
 kc_reg_cyclient() {
-	curl -v -X POST "$KC_URL/admin/realms/$KC_REALM/clients" \
+	curl -s -X POST "$KC_URL/admin/realms/$KC_REALM/clients" \
 	     -H "Accept: application/json" \
 	     -H "Authorization: Bearer $AC_TKN" \
 	     -H "Content-Type: application/json" \
@@ -155,15 +166,20 @@ while [ "$1" != "" ]; do
 		-h | --help )        usage
 		                     exit 0
 		                     ;;
-		reg-samlbridge )     CY_ACTION=1
+		update-realm )       shift
+		                     CY_REALM=$1
+		                     CY_ACTION=1
 		                     break
 		                     ;;
-		reg-clienttemplate ) CY_ACTION=2
+		reg-samlbridge )     CY_ACTION=2
+		                     break
+		                     ;;
+		reg-clienttemplate ) CY_ACTION=3
 		                     break
 		                     ;;
 		reg-client )         shift
 		                     CY_CLIENT=$1
-		                     CY_ACTION=3
+		                     CY_ACTION=4
 		                     break
 		                     ;;
 		* )                  usage
@@ -182,14 +198,18 @@ if [ $CY_ACTION == 0 ]; then
 fi
 
 if [ $CY_ACTION == 1 ]; then
-	kc_reg_idp
+	kc_update_realm
 fi
 
 if [ $CY_ACTION == 2 ]; then
-	kc_reg_cyclient_template $CY_TEMPLATE
+	kc_reg_idp
 fi
 
 if [ $CY_ACTION == 3 ]; then
+	kc_reg_cyclient_template $CY_TEMPLATE
+fi
+
+if [ $CY_ACTION == 4 ]; then
 	kc_reg_cyclient
 fi
 
