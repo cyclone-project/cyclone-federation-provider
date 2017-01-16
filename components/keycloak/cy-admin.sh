@@ -6,9 +6,9 @@ MAP_ATTR="displayName schacHomeOrganization schacHomeOrganizationType eduPersonU
 
 KC_USER=${KEYCLOAK_USER}
 KC_PASSWORD=${KEYCLOAK_PASSWORD}
-KC_URL=${KEYCLOAK_URL:=http://localhost:8080/auth}
+KC_URL=${FP_BASEURL:=http://localhost:8080}/auth
 KC_REALM=${KEYCLOAK_REALM:=master}
-SSP_URL=${SAMLBRIDGE_URL}
+SSP_URL=${FP_BASEURL}/samlbridge
 CY_TEMPLATE="cy-client-template.json"
 CY_CLIENT=
 CY_REALM=

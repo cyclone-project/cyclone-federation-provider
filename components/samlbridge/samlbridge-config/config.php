@@ -21,7 +21,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => (getenv('SAMLBRIDGE_URL') ?: 'samlbridge') . '/',
+    'baseurlpath' => getenv('FP_BASEURL') . '/samlbridge/',
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',

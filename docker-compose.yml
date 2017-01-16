@@ -51,8 +51,7 @@ services:
     build: ./components/samlbridge
     restart: unless-stopped
     environment:
-      - KEYCLOAK_URL
-      - SAMLBRIDGE_URL
+      - FP_BASEURL
       - SAMLBRIDGE_PASSWORD
       - SAMLBRIDGE_SALT
       - SAMLBRIDGE_CONTACTNAME

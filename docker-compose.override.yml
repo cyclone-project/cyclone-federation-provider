@@ -6,8 +6,6 @@ version: '2'
 services:
 
   samlbridge:
-    environment:
-      - SAMLIDP_URL
     volumes:
       - ./demo/samlbridge-idp-remote.php:/var/simplesamlphp/metadata/saml20-idp-remote.php
 
@@ -21,8 +19,7 @@ services:
       - "traefik.backend=samlidp"
       - "traefik.frontend.rule=PathPrefix:/samlidp"
     environment:
-      - SAMLBRIDGE_URL
-      - SAMLIDP_URL
+      - FP_BASEURL
       - SAMLIDP_PASSWORD
       - SAMLIDP_SALT
       - SAMLIDP_CONTACTNAME

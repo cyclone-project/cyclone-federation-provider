@@ -21,7 +21,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => (getenv('SAMLIDP_URL') ?: 'samlidp') . '/',
+    'baseurlpath' => getenv('FP_BASEURL') . '/samlidp/',
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
