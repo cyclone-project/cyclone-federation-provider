@@ -5,6 +5,12 @@ version: '2'
 
 services:
 
+  keycloak:
+    environment:
+      - KCIMPORT
+    volumes:
+      - ./demo/kcexport.json:/opt/jboss/exports/kcexport.json
+
   samlbridge:
     volumes:
       - ./demo/samlbridge-idp-remote.php:/var/simplesamlphp/metadata/saml20-idp-remote.php
