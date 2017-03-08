@@ -1,5 +1,12 @@
-FROM jboss/keycloak-postgres:2.4.0.Final
+FROM jboss/keycloak-postgres:2.5.4.Final
 
-COPY cy-* /opt/jboss/keycloak/
+USER root
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
+USER jboss
+COPY cy-conf.cli /opt/jboss/keycloak/cy-conf.cli
 RUN /opt/jboss/keycloak/bin/jboss-cli.sh --file=/opt/jboss/keycloak/cy-conf.cli
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
