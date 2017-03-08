@@ -3,7 +3,7 @@
 addargs=""
 
 if [ ! -f /opt/jboss/firstrun ]; then
-	if [ $KCIMPORT = true ]; then
+	if [ "$KC_IMPORT" = true ]; then
 		echo "First run + Import adding import args\n"
 		addargs="-Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.strategy=OVERWRITE_EXISTING -Dkeycloak.migration.file=/opt/jboss/exports/kcexport.json"
 	fi

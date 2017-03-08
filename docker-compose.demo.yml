@@ -7,7 +7,7 @@ services:
 
   keycloak:
     environment:
-      - KCIMPORT
+      - KC_IMPORT
     volumes:
       - ./demo/kcexport.json:/opt/jboss/exports/kcexport.json
 
