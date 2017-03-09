@@ -5,28 +5,7 @@
   "displayNameHtml" : "",
   "enabled": true,
   "sslRequired" : "none",
-  "users" : [ {
-    "username" : "admin",
-    "enabled" : true,
-    "credentials" : [ {
-      "type" : "password",
-      "hashedSaltedValue" : "mwNYSrzDSCII9dlOmS1qwAzP+GTO+IuzVv2mAFvNLubZtax9h4yDthZf/59VHxA7JL0kYTspltaQevDm2NFmjw==",
-      "salt" : "BOSZb4I9opX/t8QUEGecbQ==",
-      "hashIterations" : 20000,
-      "counter" : 0,
-      "algorithm" : "pbkdf2",
-      "digits" : 0,
-      "period" : 0,
-      "config" : { }
-    } ],
-    "disableableCredentialTypes" : [ "password" ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "uma_authorization", "admin", "offline_access" ],
-    "clientRoles" : {
-      "account" : [ "manage-account", "view-profile" ]
-    },
-    "groups" : [ ]
-  } ],
+  "users" : [ ],
   "clientTemplates" : [ {
     "name" : "Cyclone Template",
     "description" : "Cyclone Client Template",
