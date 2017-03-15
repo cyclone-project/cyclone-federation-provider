@@ -1,4 +1,4 @@
-FROM jboss/keycloak-postgres:2.5.4.Final
+FROM jboss/keycloak-postgres:2.5.5.Final
 
 USER root
 COPY docker-entrypoint.sh /docker-entrypoint.sh
