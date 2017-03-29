@@ -68,6 +68,7 @@ services:
       - ./components/samlbridge/saml20-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
       - ./components/samlbridge/saml20-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
       - ./components/samlbridge/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./components/samlbridge/php.ini:/usr/local/etc/php/conf.d/php.ini
     expose:
       - "80"
 
