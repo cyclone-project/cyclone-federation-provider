@@ -52,6 +52,7 @@ services:
     restart: unless-stopped
     environment:
       - FP_BASEURL
+      - SAMLBRIDGE_CRON
       - SAMLBRIDGE_PASSWORD
       - SAMLBRIDGE_SALT
       - SAMLBRIDGE_CONTACTNAME
@@ -74,6 +75,7 @@ services:
     build: ./components/cron
     restart: unless-stopped
     environment:
+      - SAMLBRIDGE_CRON
       - KEYCLOAK_USER
       - KEYCLOAK_PASSWORD
       - EXCLUDED_USERS
