@@ -3,7 +3,7 @@ Base configuration and demo for the cyclone-federation-provider. It uses [Traefi
 
 
 ## Provider connection architecture
-![architecture] (https://raw.githubusercontent.com/cyclone-project/cyclone-federation-provider/master/docs/cyclone-diagram.png)
+![architecture](https://raw.githubusercontent.com/cyclone-project/cyclone-federation-provider/master/docs/cyclone-diagram.png)
 
 
 ## Configuration
