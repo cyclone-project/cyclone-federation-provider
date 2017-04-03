@@ -1,41 +1,41 @@
 # Cyclone Federation Provider
+Base configuration and demo for the cyclone-federation-provider. It uses [Traefik](https://traefik.io/) to proxy to backend containers and is deployed with [Docker and Docker-Compose](https://www.docker.com/). [Keycloak](http://keycloak.org) with [PostgreSQL](https://www.postgresql.org) serves as the identity provider and [SimpleSamlPHP](https://simplesamlphp.org) as a samlbridge. The cron container prompts the samlbridge to refresh its metadata every hour and keycloak to delete users with no sessions (with some exceptions like the admin) for data-privacy reasons.
 
-## Components:
-[Keycloak](http://keycloak.org) in combination with [MongoDB](https://www.mongodb.org/) and [SimpleSamlPHP](https://simplesamlphp.org) as a samlbridge.
-
-Please see the documentation for [Keycloak](http://keycloak.org/docs), [MongoDB](https://docs.mongodb.org/manual/), [SimpleSamlPHP](https://simplesamlphp.org/docs/stable/) and [Docker](http://docs.docker.com/) for more information.
 
 ## Provider connection architecture
-![architecture] (https://raw.githubusercontent.com/cyclone-project/cyclone-federation-provider/master/docs/cyclone-diagram.png)
+![architecture](https://raw.githubusercontent.com/cyclone-project/cyclone-federation-provider/master/docs/cyclone-diagram.png)
+
 
 ## Configuration
-Configure Keycloak and SimpleSamlPHP by editing the files in `components/keycloak/config` or `components/samlbridge/config` respectively. 
+Most configuration is handled by environment variables (see .env file), some can be edited in each component's respective folder or overwritten by mounting as a docker volume.
 
-The Keycloak database is persisted (by default) in `data/keycloak/db`. Import configuration for keycloak by adding the `keycloak-export.json` to data/keycloak/exports and editing docker-compose.yml.
+The database is persisted (by default) in `data/keycloak/db`. The keycloak container can import pre-exported configuration. Its entrypoint is set to import from `/data/keycloak/exports/kcexport.json` if `KC_IMPORT` is set to `true` (and the container is run for the first time).
 
-__The provided keycloak-export.json includes:__
 
-Default Users for Keycloak:
+## Deploy the Demo
+Replace the host for the samlbridge with the correct one in the provided demo kcexport_template.json, e.g. run
+```
+sed "s/%SSP_URL%/http:\/\/localhost\/samlbridge/g; s/%SSP_ALIAS%/DemoIDP/g" demo/kcexport_template.json > demo/kcexport.json
+```
+Configure keycloak to import, i.e. set KC_IMPORT=true, then deploy with docker-compose
+```
+docker-compose -f docker-compose.yml -f docker-compose.demo.yml up
+```
 
-| Username | Password |
-|:--------:|:--------:|
-|admin     | admin    |
-|owner     | owner    |
-|user      | user     |
-|guest     | guest    |
+The demo wires keycloak to the samlbridge and provides a demo saml idp.
 
-Default Clients for Keycloak:
+The __admin username and password__ for keycloak is both `admin`. To connect with a client, create one inside the admin panel of keycloak using the `Cyclone Template` as client template.
 
-| Client Id  | Redirect Uri |
-|:----------:|:------------:|
-| slipstream | *            |
-| portal     | *            |
-| test       | *            |
+__Demo users__ for the demo saml idp are `user`, `user1`, `user2`, `user3`, `user4` with the password `user`. Each user returns a slightly different set of information.
 
-## Deployment
-Build and run with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) by executing `docker-compose up`.
+By default, the components are at the following endpoints:
 
-By default, Keycloak listens at `http://localhost:9080` and SimpleSamlPHP at `http://localhost:8080/samlbridge`
+| Component  | Endpoint    |
+|:----------:|:-----------:|
+| Keycloak   | /auth       |
+| Samlbridge | /samlbridge |
+| DemoIDP    | /samlidp    |
+
 
 ## Authn/Authz with keycloak
 

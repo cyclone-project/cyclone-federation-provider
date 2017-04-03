@@ -21,7 +21,7 @@ $config = array(
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => getenv('SSP_BASEURL') ?: 'samlbridge/',
+    'baseurlpath' => getenv('FP_BASEURL') . '/samlidp/',
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
@@ -75,7 +75,7 @@ $config = array(
      * metadata listing and diagnostics pages.
      * You can also put a hash here; run "bin/pwgen.php" to generate one.
      */
-    'auth.adminpassword' => getenv('SSP_PASSWORD') ?: '123',
+    'auth.adminpassword' => getenv('SAMLIDP_PASSWORD') ?: '123',
     'admin.protectindexpage' => true,
     'admin.protectmetadata' => false,
 
@@ -87,15 +87,15 @@ $config = array(
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
      */
-    'secretsalt' => getenv('SSP_SALT') ?: 'defaultsecretsalt',
+    'secretsalt' => getenv('SAMLIDP_SALT') ?: 'defaultsecretsalt',
 
     /*
      * Some information about the technical persons running this installation.
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name' => getenv('SSP_CONTACTNAME') ?: '',
-    'technicalcontact_email' => getenv('SSP_CONTACTEMAIL') ?: '',
+    'technicalcontact_name' => getenv('SAMLIDP_CONTACTNAME') ?: '',
+    'technicalcontact_email' => getenv('SAMLIDP_CONTACTEMAIL') ?: '',
 
     /*
      * The timezone of the server. This option should be set to the timezone you want
@@ -231,10 +231,7 @@ $config = array(
      */
 
       'module.enable' => array(
-        'cron' => TRUE,
-        'discopower' => TRUE,
-        'metarefresh' => TRUE,
-        'smartattributes' => TRUE,
+        'authcrypt' => TRUE,
       ),
 
     /*
@@ -258,7 +255,7 @@ $config = array(
     /*
      * Option to override the default settings for the session cookie name
      */
-    'session.cookie.name' => 'SimpleSAMLSessionID',
+    'session.cookie.name' => 'SAMLIDPSessionID',
 
     /*
      * Expiration time for the session cookie, in seconds.
@@ -321,7 +318,7 @@ $config = array(
     /*
      * Options to override the default settings for php sessions.
      */
-    'session.phpsession.cookiename' => null,
+    'session.phpsession.cookiename' => 'SAMLIDPPHPSESSID',
     'session.phpsession.savepath' => null,
     'session.phpsession.httponly' => false,
 
@@ -469,63 +466,8 @@ $config = array(
      * Both Shibboleth and SAML 2.0
      */
     'authproc.idp' => array(
-
-        // Adopts language from attribute to use in UI
-        30 => 'core:LanguageAdaptor',
-
-        45 => array(
-            'class'         => 'core:StatisticsWithAttribute',
-            'attributename' => 'realm',
-            'type'          => 'saml20-idp-SSO',
-        ),
-
-        // filter eduPersonTargetedID, convert to string
-        50 => array(
-            'class' => 'core:PHP',
-            'code' => '
-                $eptid;
-                $attributeName;
-                if ($attributes["eduPersonTargetedID"]) {
-                    $attributeName = "eduPersonTargetedID";
-                    $eptid = $attributes["eduPersonTargetedID"];
-                } else if ($attributes["urn:oid:1.3.6.1.4.1.5923.1.1.1.10"]) {
-                    $attributeName = "urn:oid:1.3.6.1.4.1.5923.1.1.1.10";
-                    $eptid = $attributes["urn:oid:1.3.6.1.4.1.5923.1.1.1.10"];
-                }
-                if (empty($eptid) || !($eptid[0] instanceof DOMNodeList)) {
-                    return;
-                }
-                $value = "";
-                $node = $eptid[0]->item(0);
-                if (!empty($node->attributes->getNamedItem("NameQualifier"))) {
-                    $value .= $node->attributes->getNamedItem("NameQualifier")->value . "!";
-                }
-                if (!empty($node->attributes->getNamedItem("SPNameQualifier"))) {
-                    $value .= $node->attributes->getNamedItem("SPNameQualifier")->value . "!";
-                }
-                $value .= $node->nodeValue;
-                $attributes[$attributeName] = array($value);
-            ',
-        ),
-
-        // choose an id smartly from a list of candidates
-        60 => array(
-            'class' => 'smartattributes:SmartID',
-            'candidates' => array('eduPersonUniqueID', 'urn:oid:1.3.6.1.4.1.5923.1.1.1.13', 'eduPersonTargetedID', 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10', 'eduPersonPrincipalName', 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6', 'mail', 'urn:oid:0.9.2342.19200300.100.1.3'),
-            'id_attribute' => 'smart_id',
-            'add_authority' => true,
-            'add_candidate' => false
-        ),
-
-        // use smart_id as nameid
-        70 => array(
-           'class' => 'saml:AttributeNameID',
-           'Format' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-           'attribute' => 'smart_id',
-        ),
-
         // If language is set in Consent module it will be added as an attribute.
-        99 => 'core:LanguageAdaptor',
+        90 => 'core:LanguageAdaptor',
     ),
 
     /*
@@ -607,7 +549,6 @@ $config = array(
      */
     'metadata.sources' => array(
         array('type' => 'flatfile'),
-        array('type' => 'flatfile', 'directory' => 'metadata/metarefresh'),
       ),
 
     /*

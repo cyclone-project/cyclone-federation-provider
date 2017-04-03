@@ -1,22 +1,13 @@
-FROM openjdk
+FROM jboss/keycloak-postgres:3.0.0.Final
 
-ENV KEYCLOAK_VERSION=2.2.1.Final \
-    JBOSS_HOME=/home/cyclone/keycloak
+USER root
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
-RUN useradd -ms /bin/bash cyclone
-USER cyclone
+USER jboss
+COPY cy-conf.cli /opt/jboss/keycloak/cy-conf.cli
+RUN /opt/jboss/keycloak/bin/jboss-cli.sh --file=/opt/jboss/keycloak/cy-conf.cli &&\
+    rm -rf /opt/jboss/keycloak/standalone/configuration/standalone_xml_history/current
 
-WORKDIR /home/cyclone
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
-RUN wget https://downloads.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz \
- && tar -xvf keycloak-$KEYCLOAK_VERSION.tar.gz \
- && rm keycloak-$KEYCLOAK_VERSION.tar.gz \
- && mv keycloak-$KEYCLOAK_VERSION $JBOSS_HOME
-
-ENTRYPOINT ["keycloak/bin/standalone.sh"]
-CMD ["-b", "0.0.0.0"]
-
-EXPOSE 8080
-
-COPY theme/cyclone  $JBOSS_HOME/themes/cyclone
-COPY standalone.xml $JBOSS_HOME/standalone/configuration/standalone.xml

@@ -1,54 +1,88 @@
 version: '2'
 
+# Base Compose File for the Cyclone Federation Provider
+
 services:
 
+  proxy:
+    image: traefik
+    command: --web --docker --docker.exposedByDefault=false --loglevel=info
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev/null:/traefik.toml
+    ports:
+        - "80:80"
+        - "8080:8080"
+        #- "443:443"
+
   keycloak:
-      build: ./components/keycloak
-      image: cyclonefp/keycloak
-      #command: -b 0.0.0.0 -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/opt/keycloak/exports/keycloak-export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
-      restart: unless-stopped
-      volumes:
-        - ./data/keycloak/exports:/opt/keycloak/exports
-      links:
-        - keycloakdb
+    build: ./components/keycloak
+    restart: unless-stopped
+    command: -b 0.0.0.0
+    environment:
+      - KEYCLOAK_REALM
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=keycloak"
+      - "traefik.frontend.rule=PathPrefix:/auth"
+    volumes:
+      - ./components/keycloak/theme/cyclone:/opt/jboss/keycloak/themes/cyclone
+    depends_on:
+      - keycloakdb
+    expose:
+      - "8080"
 
   keycloakdb:
-      image: mongo:3
-      restart: unless-stopped
-      volumes:
-        - ./data/keycloak/db:/data/db
-      expose:
-        - "27017"
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - ./data/keycloak/db:/var/lib/postgresql/data
+    expose:
+      - "5432"
 
   samlbridge:
-      build: ./components/samlbridge
-      image: cyclonefp/samlbridge
-      restart: unless-stopped
-      #environment:
-      #  - SSP_BASEURL=samlbridge/
-      #  - SSP_PASSWORD=admin
-      #  - SSP_SALT=defaultsalt
-      #  - SSP_CONTACTNAME=
-      #  - SSP_CONTACTEMAIL=
-
-  cacheclean:
-      build: ./components/cache-clean
-      image: cyclonefp/cacheclean
-      restart: unless-stopped
-      environment:
-        - KEYCLOAK_ADMIN_USER=admin
-        - KEYCLOAK_ADMIN_PASS=admin
-        - KEYCLOAK_ADMIN_CLIENT=admin-cli
-        - KEYCLOAK_REALM=master
-        - PERIOD=60000
-        - EXCLUDED_USERS=admin;owner;user;tub;uva;cnrs;guest
-      links:
-        - keycloakdb
-        - keycloak
+    build: ./components/samlbridge
+    restart: unless-stopped
+    environment:
+      - FP_BASEURL
+      - SAMLBRIDGE_CRON
+      - SAMLBRIDGE_PASSWORD
+      - SAMLBRIDGE_SALT
+      - SAMLBRIDGE_CONTACTNAME
+      - SAMLBRIDGE_CONTACTEMAIL
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=samlbridge"
+      - "traefik.frontend.rule=PathPrefix:/samlbridge"
+    volumes:
+      - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
+      - ./components/samlbridge/samlbridge-config:/var/simplesamlphp/config
+      - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
+      - ./components/samlbridge/saml20-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
+      - ./components/samlbridge/saml20-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
+      - ./components/samlbridge/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./components/samlbridge/php.ini:/usr/local/etc/php/conf.d/php.ini
+    expose:
+      - "80"
 
   cron:
-      build: ./components/cron
-      image: cyclonefp/cron
-      restart: unless-stopped
-      links:
-        - samlbridge
+    build: ./components/cron
+    restart: unless-stopped
+    environment:
+      - SAMLBRIDGE_CRON
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - EXCLUDED_USERS
+    volumes:
+      - ./components/cron/periodic:/etc/periodic
+    depends_on:
+      - keycloak
+      - samlbridge
+

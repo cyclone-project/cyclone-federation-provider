@@ -1,2 +1,2 @@
 #!/bin/sh
-curl --silent "http://samlbridge:80/samlbridge/module.php/cron/cron.php?key=changeMe&tag=daily"
+curl --silent "http://samlbridge:80/samlbridge/module.php/cron/cron.php?key=$SAMLBRIDGE_CRON&tag=daily"

@@ -5,7 +5,7 @@
 
 $config = array (
 
-	'key' => 'changeMe',
+	'key' => getenv('SAMLBRIDGE_CRON'),
 	'allowed_tags' => array('daily', 'hourly'),
 	'debug_message' => TRUE,
 	'sendemail' => FALSE,
