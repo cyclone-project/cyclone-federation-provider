@@ -5,6 +5,10 @@ version: '2'
 
 services:
 
+  proxy:
+    ports:
+      - "8080:8080"
+
   keycloak:
     environment:
       - KC_IMPORT

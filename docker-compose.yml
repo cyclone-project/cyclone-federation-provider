@@ -12,8 +12,6 @@ services:
       - /dev/null:/traefik.toml
     ports:
         - "80:80"
-        - "8080:8080"
-        #- "443:443"
 
   keycloak:
     build: ./components/keycloak
