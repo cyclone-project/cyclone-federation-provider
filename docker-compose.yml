@@ -27,7 +27,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.backend=keycloak"
-      - "traefik.frontend.rule=PathPrefix:/auth"
+      - "traefik.frontend.rule=PathPrefix:/,/auth"
     volumes:
       - ./components/keycloak/theme/cyclone:/opt/jboss/keycloak/themes/cyclone
     depends_on:
