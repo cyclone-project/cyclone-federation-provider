@@ -45,3 +45,6 @@ services:
     expose:
       - "80"
 
+  cron:
+    volumes:
+      - /dev/null:/etc/periodic/daily/metarefresh
