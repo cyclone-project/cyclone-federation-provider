@@ -1,4 +1,4 @@
-FROM jboss/keycloak-postgres:3.1.0.Final
+FROM cycloneproject/keycloak-postgres
 
 USER root
 COPY docker-entrypoint.sh /docker-entrypoint.sh
