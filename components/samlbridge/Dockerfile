@@ -1,9 +1,9 @@
 FROM php:apache
 
-ENV SSP_VERSION=1.14.12
-ENV SSP_CHECKSUM=349ca4c4dd8f5cbd991dc291d859363568f0081fe368736b5d9d9d4cceeb1c59
+ENV SSP_VERSION=1.14.14
+ENV SSP_CHECKSUM=2ff76d8b379141cdd3340dbd8e8bab1605e7a862d4a31657cc37265817463f48
 
-RUN apt-get update && apt-get -y install wget libgmp-dev libmcrypt-dev zlib1g-dev \
+RUN apt-get update && apt-get -y install libgmp-dev libmcrypt-dev wget zlib1g-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/* \
  && ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/ \
  && docker-php-ext-configure gmp     \
