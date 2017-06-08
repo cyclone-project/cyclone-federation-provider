@@ -17,6 +17,7 @@ services:
 
   samlbridge:
     volumes:
+      - ./demo/samlbridge-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
       - ./demo/samlbridge-idp-remote.php:/var/simplesamlphp/metadata/saml20-idp-remote.php
 
   samlidp:
