@@ -49,7 +49,7 @@ __NOTE:__ Underlying standard is [OpenId-Connect](http://openid.net/connect/), s
 3. User login happens with any of the methods supported by keycloak.
 
 4. After successful login, user is redirected to (redirect_uri) with a code:
-`(redirect_uri)/?code=(code)`
+`(redirect_uri)?code=(code)`
 
 5. Use this code to retrieve a set of JSON Web Tokens (JWT):
 ```http
