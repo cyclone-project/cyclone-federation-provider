@@ -69,14 +69,14 @@ $config = array(
             ),
         ),
 
-        /* 'RegistrationInfo' => array(
-            'authority' => '',
-            'instant' => '',
+        'RegistrationInfo' => array(
+            'authority' => getenv('SAMLBRIDGE_REG_AUTHORITY'),
+            'instant' => getenv('SAMLBRIDGE_REG_INSTANT'),
             'policies' => array(
-                'en' => '',
-                'de' => ''
+                'en' => 'https://www.aai.dfn.de/en/join/',
+                'de' => 'https://www.aai.dfn.de/teilnahme/',
             )
-        ), */
+        ),
 
         'UIInfo' => array(
             'DisplayName' => array(
@@ -109,35 +109,35 @@ $config = array(
             'de' => 'Der CYCLONE Test Federation Provider dient zum Testen und zur Demonstration der im CYCLONE – Projekt entwickelten Technologien'
         ),
 
-        /* 'contacts' => array(
+        'contacts' => array(
             array(
                 'contactType' => 'administrative',
-                'emailAddress' => '',
-                'givenName' => '',
-                'surName' => ''
+                'emailAddress' => getenv('SAMLBRIDGE_CONTACTEMAIL'),
+                'givenName' => getenv('SAMLBRIDGE_CONTACTGIVENNAME'),
+                'surName' => getenv('SAMLBRIDGE_CONTACTSURNAME')
             ),
             array(
                 'contactType' => 'support',
-                'emailAddress' => '',
-                'givenName' => '',
-                'surName' => ''
+                'emailAddress' => getenv('SAMLBRIDGE_CONTACTEMAIL'),
+                'givenName' => getenv('SAMLBRIDGE_CONTACTGIVENNAME'),
+                'surName' => getenv('SAMLBRIDGE_CONTACTSURNAME')
             )
-        ), */
+        ),
 
-        /* 'OrganizationName' => array(
-            'en' => '',
-            'de' => ''
-        ), */
+        'OrganizationName' => array(
+            'en' => getenv('SAMLBRIDGE_ORGNAME'),
+            'de' => getenv('SAMLBRIDGE_ORGNAME')
+        ),
 
-        /* 'OrganizationDisplayName' => array(
-            'en' => '',
-            'de' => ''
-        ), */
+        'OrganizationDisplayName' => array(
+            'en' => getenv('SAMLBRIDGE_ORGDISPLAYNAME'),
+            'de' => getenv('SAMLBRIDGE_ORGDISPLAYNAME')
+        ),
 
-        /* 'OrganizationURL' => array(
-            'en' => '',
-            'de' => ''
-        ), */
+        'OrganizationURL' => array(
+            'en' => getenv('SAMLBRIDGE_ORGURL'),
+            'de' => getenv('SAMLBRIDGE_ORGURL')
+        ),
 
         /*
          * WARNING: SHA-1 is disallowed starting January the 1st, 2014.

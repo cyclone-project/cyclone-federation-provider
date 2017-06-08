@@ -22,7 +22,7 @@ $config = array(
      * reverse proxy).
      */
     'baseurlpath' => getenv('FP_BASEURL') . '/samlbridge/',
-    'certdir' => 'cert/',
+    'certdir' => '/run/secrets/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
 
@@ -622,7 +622,6 @@ $config = array(
      * (This option replaces the old 'session.handler'-option.)
      */
     'store.type'                    => 'phpsession',
-
 
     /*
      * The DSN the sql datastore should connect to.

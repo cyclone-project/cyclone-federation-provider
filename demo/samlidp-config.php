@@ -22,7 +22,7 @@ $config = array(
      * reverse proxy).
      */
     'baseurlpath' => getenv('FP_BASEURL') . '/samlidp/',
-    'certdir' => 'cert/',
+    'certdir' => '/run/secrets/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
 

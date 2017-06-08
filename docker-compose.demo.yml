@@ -21,9 +21,7 @@ services:
       - ./demo/samlbridge-idp-remote.php:/var/simplesamlphp/metadata/saml20-idp-remote.php
 
   samlidp:
-    extends:
-      file: docker-compose.yml
-      service: samlbridge
+    image: cycloneproject/samlbridge-base
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -36,8 +34,7 @@ services:
       - SAMLIDP_CONTACTNAME
       - SAMLIDP_CONTACTEMAIL
     volumes:
-      - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
-      - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
+      - ./components/samlbridge/samlbridge-cert:/run/secrets
       - ./demo/samlidp-config.php:/var/simplesamlphp/config/config.php
       - ./demo/samlidp-authsources.php:/var/simplesamlphp/config/authsources.php
       - ./demo/samlidp-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
@@ -49,3 +46,4 @@ services:
   cron:
     volumes:
       - /dev/null:/etc/periodic/daily/metarefresh
+

@@ -27,6 +27,13 @@ RUN mkdir -p data metarefresh-edugain metadata/metarefresh &&\
   chown -R www-data:www-data data metadata &&\
   chown -R www-data:www-data metarefresh-edugain
 
+COPY samlbridge-config /var/simplesamlphp/config
+COPY modules/cyclone /var/simplesamlphp/modules/cyclone
+COPY saml20-idp-hosted.php /var/simplesamlphp/metadata/saml20-idp-hosted.php
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+COPY php.ini /usr/local/etc/php/conf.d/php.ini
+
 EXPOSE 80
 
 CMD ["apache2-foreground"]

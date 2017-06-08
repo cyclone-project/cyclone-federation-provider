@@ -16,6 +16,7 @@ services:
 
   keycloak:
     build: ./components/keycloak
+    image: cycloneproject/keycloak-postgres-base
     restart: unless-stopped
     command: -b 0.0.0.0
     environment:
@@ -24,18 +25,18 @@ services:
       - KEYCLOAK_PASSWORD
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - POSTGRES_PORT_5432_TCP_ADDR
+      - POSTGRES_PORT_5432_TCP_PORT
     labels:
       - "traefik.enable=true"
       - "traefik.backend=keycloak"
       - "traefik.frontend.rule=PathPrefix:/,/auth"
-    volumes:
-      - ./components/keycloak/theme/cyclone:/opt/jboss/keycloak/themes/cyclone
     depends_on:
-      - keycloakdb
+      - postgres
     expose:
       - "8080"
 
-  keycloakdb:
+  postgres:
     image: postgres:alpine
     restart: unless-stopped
     environment:
@@ -48,40 +49,39 @@ services:
 
   samlbridge:
     build: ./components/samlbridge
+    image: cycloneproject/samlbridge-base
     restart: unless-stopped
     environment:
       - FP_BASEURL
       - SAMLBRIDGE_CRON
       - SAMLBRIDGE_PASSWORD
       - SAMLBRIDGE_SALT
-      - SAMLBRIDGE_CONTACTNAME
+      - SAMLBRIDGE_CONTACTGIVENNAME
+      - SAMLBRIDGE_CONTACTSURNAME
       - SAMLBRIDGE_CONTACTEMAIL
+      - SAMLBRIDGE_ORGURL
+      - SAMLBRIDGE_ORGDISPLAYNAME
+      - SAMLBRIDGE_ORGNAME
+      - POSTGRES_PORT_5432_TCP_ADDR
+      - POSTGRES_PORT_5432_TCP_PORT
     labels:
       - "traefik.enable=true"
       - "traefik.backend=samlbridge"
       - "traefik.frontend.rule=PathPrefix:/samlbridge"
     volumes:
-      - ./components/samlbridge/samlbridge-cert:/var/simplesamlphp/cert
-      - ./components/samlbridge/samlbridge-config:/var/simplesamlphp/config
-      - ./components/samlbridge/modules/cyclone:/var/simplesamlphp/modules/cyclone
-      - ./components/samlbridge/saml20-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
-      - ./components/samlbridge/saml20-idp-hosted.php:/var/simplesamlphp/metadata/saml20-idp-hosted.php
-      - ./components/samlbridge/000-default.conf:/etc/apache2/sites-available/000-default.conf
-      - ./components/samlbridge/php.ini:/usr/local/etc/php/conf.d/php.ini
-      - ./components/samlbridge/mpm_prefork.conf:/etc/apache2/mods-enabled/mpm_prefork.conf
+      - ./components/samlbridge/samlbridge-cert:/run/secrets
     expose:
       - "80"
 
   cron:
     build: ./components/cron
+    image: cycloneproject/cron
     restart: unless-stopped
     environment:
       - SAMLBRIDGE_CRON
       - KEYCLOAK_USER
       - KEYCLOAK_PASSWORD
       - EXCLUDED_USERS
-    volumes:
-      - ./components/cron/periodic:/etc/periodic
     depends_on:
       - keycloak
       - samlbridge
