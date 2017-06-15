@@ -94,7 +94,7 @@ $config = array(
      * The email address will be used as the recipient address for error reports, and
      * also as the technical contact in generated metadata.
      */
-    'technicalcontact_name' => getenv('SAMLBRIDGE_CONTACTNAME') ?: '',
+    'technicalcontact_name' => getenv('SAMLBRIDGE_CONTACTGIVENNAME') . ' ' . getenv('SAMLBRIDGE_CONTACTSURNAME'),
     'technicalcontact_email' => getenv('SAMLBRIDGE_CONTACTEMAIL') ?: '',
 
     /*
