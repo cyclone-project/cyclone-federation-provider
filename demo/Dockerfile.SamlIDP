@@ -1,0 +1,8 @@
+FROM cycloneproject/samlbridge-base
+
+COPY samlidp-config.php /var/simplesamlphp/config/config.php
+COPY samlidp-authsources.php /var/simplesamlphp/config/authsources.php
+COPY samlidp-idp-hosted.php /var/simplesamlphp/metadata/saml20-idp-hosted.php
+COPY samlidp-sp-remote.php /var/simplesamlphp/metadata/saml20-sp-remote.php
+COPY samlidp-000-default.conf /etc/apache2/sites-available/000-default.conf
+

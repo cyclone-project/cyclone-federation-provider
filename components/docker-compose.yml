@@ -12,10 +12,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /dev/null:/traefik.toml
     ports:
-        - "80:80"
+      - "80:80"
 
   keycloak:
-    build: ./components/keycloak
+    build: ./keycloak
     image: cycloneproject/keycloak-postgres-base
     restart: unless-stopped
     command: -b 0.0.0.0
@@ -40,6 +40,7 @@ services:
     image: postgres:alpine
     restart: unless-stopped
     environment:
+      - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     volumes:
@@ -48,7 +49,7 @@ services:
       - "5432"
 
   samlbridge:
-    build: ./components/samlbridge
+    build: ./samlbridge
     image: cycloneproject/samlbridge-base
     restart: unless-stopped
     environment:
@@ -74,7 +75,7 @@ services:
       - "80"
 
   cron:
-    build: ./components/cron
+    build: ./cron
     image: cycloneproject/cron
     restart: unless-stopped
     environment:

@@ -1,0 +1,114 @@
+version: '2'
+
+# Deploys a demo environment for the Cyclone Federation Provider
+# complete with all tools + a samlidp.
+
+services:
+
+  proxy:
+    image: traefik
+    restart: unless-stopped
+    command: --web --docker --docker.exposedByDefault=false --loglevel=info
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev/null:/traefik.toml
+    ports:
+      - "80:80"
+      - "8080:8080"
+
+  keycloak:
+    image: cycloneproject/keycloak-postgres-base
+    restart: unless-stopped
+    command: -b 0.0.0.0
+    environment:
+      - KC_IMPORT
+      - KEYCLOAK_REALM
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_PORT_5432_TCP_ADDR
+      - POSTGRES_PORT_5432_TCP_PORT
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=keycloak"
+      - "traefik.frontend.rule=PathPrefix:/,/auth"
+    volumes:
+      - ./kcexport.json:/opt/jboss/exports/kcexport.json
+    depends_on:
+      - postgres
+    expose:
+      - "8080"
+
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    expose:
+      - "5432"
+
+  samlbridge:
+    image: cycloneproject/samlbridge-base
+    restart: unless-stopped
+    environment:
+      - FP_BASEURL
+      - SAMLBRIDGE_CRON
+      - SAMLBRIDGE_PASSWORD
+      - SAMLBRIDGE_SALT
+      - SAMLBRIDGE_CONTACTGIVENNAME
+      - SAMLBRIDGE_CONTACTSURNAME
+      - SAMLBRIDGE_CONTACTEMAIL
+      - SAMLBRIDGE_ORGURL
+      - SAMLBRIDGE_ORGDISPLAYNAME
+      - SAMLBRIDGE_ORGNAME
+      - POSTGRES_PORT_5432_TCP_ADDR
+      - POSTGRES_PORT_5432_TCP_PORT
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=samlbridge"
+      - "traefik.frontend.rule=PathPrefix:/samlbridge"
+    volumes:
+      - ./cert:/run/secrets
+      - ./samlbridge-sp-remote.php:/var/simplesamlphp/metadata/saml20-sp-remote.php
+      - ./samlbridge-idp-remote.php:/var/simplesamlphp/metadata/saml20-idp-remote.php
+    expose:
+      - "80"
+
+  samlidp:
+    image: cycloneproject/samlidp-demo
+    build:
+      context: .
+      dockerfile: Dockerfile.SamlIDP
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=samlidp"
+      - "traefik.frontend.rule=PathPrefix:/samlidp"
+    environment:
+      - FP_BASEURL
+      - SAMLIDP_PASSWORD
+      - SAMLIDP_SALT
+      - SAMLIDP_CONTACTNAME
+      - SAMLIDP_CONTACTEMAIL
+    volumes:
+      - ./cert:/run/secrets
+    expose:
+      - "80"
+
+  cron:
+    image: cycloneproject/cron
+    restart: unless-stopped
+    environment:
+      - SAMLBRIDGE_CRON
+      - KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD
+      - EXCLUDED_USERS
+    volumes:
+      - /dev/null:/etc/periodic/daily/metarefresh
+    depends_on:
+      - keycloak
+      - samlbridge
+
