@@ -9,6 +9,10 @@ group: edge
 services:
   - docker
 
+branches:
+  only:
+    - master
+
 env:
   - BASE_DIR=components
   - BASE_DIR=demo
