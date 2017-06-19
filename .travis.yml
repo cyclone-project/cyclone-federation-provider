@@ -2,6 +2,10 @@ sudo: required
 
 dist: trusty
 
+language: java
+
+group: edge
+
 services:
   - docker
 
