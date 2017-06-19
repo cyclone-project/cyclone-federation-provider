@@ -1,7 +1,7 @@
 version: '2'
 
-# Deploys a demo environment for the Cyclone Federation Provider
-# complete with all tools + a samlidp.
+# Deploys a single-machine demo environment for
+# the Cyclone Federation Provider, complete with a samlidp.
 
 services:
 
@@ -58,14 +58,6 @@ services:
       - SAMLBRIDGE_CRON
       - SAMLBRIDGE_PASSWORD
       - SAMLBRIDGE_SALT
-      - SAMLBRIDGE_CONTACTGIVENNAME
-      - SAMLBRIDGE_CONTACTSURNAME
-      - SAMLBRIDGE_CONTACTEMAIL
-      - SAMLBRIDGE_ORGURL
-      - SAMLBRIDGE_ORGDISPLAYNAME
-      - SAMLBRIDGE_ORGNAME
-      - POSTGRES_PORT_5432_TCP_ADDR
-      - POSTGRES_PORT_5432_TCP_PORT
     labels:
       - "traefik.enable=true"
       - "traefik.backend=samlbridge"
@@ -78,10 +70,10 @@ services:
       - "80"
 
   samlidp:
-    image: cycloneproject/samlidp-demo
     build:
       context: .
       dockerfile: Dockerfile.SamlIDP
+    image: cycloneproject/samlidp-demo
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -91,8 +83,6 @@ services:
       - FP_BASEURL
       - SAMLIDP_PASSWORD
       - SAMLIDP_SALT
-      - SAMLIDP_CONTACTNAME
-      - SAMLIDP_CONTACTEMAIL
     volumes:
       - ./cert:/run/secrets
     expose:

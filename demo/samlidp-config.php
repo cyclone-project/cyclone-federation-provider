@@ -325,7 +325,7 @@ $config = array(
     /*
      * Option to override the default settings for the auth token cookie
      */
-    'session.authtoken.cookiename' => 'SimpleSAMLAuthToken',
+    'session.authtoken.cookiename' => 'SAMLIDPAuthToken',
 
     /*
      * Options for remember me feature for IdP sessions. Remember me feature
