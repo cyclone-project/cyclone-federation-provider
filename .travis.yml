@@ -15,13 +15,19 @@ branches:
 
 env:
   - BASE_DIR=components
-  - BASE_DIR=demo
-  - BASE_DIR=ha-demo
+  - DEMO_DIR=demo
+  - HADEMO_DIR=ha-demo
 
 before_install:
   - docker -v
   - docker-compose -v
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
-script: docker-compose -f $BASE_DIR/docker-compose.yml build && docker-compose -f $BASE_DIR/docker-compose.yml push
+script:
+  - docker-compose -f $BASE_DIR/docker-compose.yml build \
+  && docker-compose -f $DEMO_DIR/docker-compose.yml build \
+  && docker-compose -f $HADEMO_DIR/docker-compose.yml build \
+  && docker-compose -f $BASE_DIR/docker-compose.yml push \
+  && docker-compose -f $DEMO_DIR/docker-compose.yml push \
+  && docker-compose -f $HADEMO_DIR/docker-compose.yml push
 
