@@ -1,0 +1,14 @@
+FROM cycloneproject/samlbridge-base
+
+RUN apt-get update \
+ && apt-get -y install libpq-dev \
+ && apt-get clean && rm -rf /var/lib/apt/lists/* \
+ && docker-php-ext-configure pdo \
+ && docker-php-ext-install pdo \
+ && docker-php-ext-configure pdo_pgsql \
+ && docker-php-ext-install pdo_pgsql
+
+COPY samlbridge-sp-remote.php /var/simplesamlphp/metadata/saml20-sp-remote.php
+COPY samlbridge-idp-remote.php /var/simplesamlphp/metadata/saml20-idp-remote.php
+COPY config.php /var/simplesamlphp/config/config.php
+

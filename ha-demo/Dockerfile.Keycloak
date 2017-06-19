@@ -1,0 +1,16 @@
+FROM cycloneproject/keycloak-postgres-base
+
+USER root
+COPY entrypoint-wrapper.sh /opt/jboss/entrypoint-wrapper.sh
+RUN chmod +x /opt/jboss/entrypoint-wrapper.sh
+
+USER jboss
+COPY changeJGroups.xsl /opt/jboss/keycloak/changeJGroups.xsl
+COPY cy-conf.cli /opt/jboss/keycloak/cy-conf.cli
+RUN /opt/jboss/keycloak/bin/jboss-cli.sh --file=/opt/jboss/keycloak/cy-conf.cli &&\
+    java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml -xsl:/opt/jboss/keycloak/changeJGroups.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml &&\
+    rm -rf /opt/jboss/keycloak/standalone/configuration/standalone_xml_history/current
+
+ENTRYPOINT ["/opt/jboss/entrypoint-wrapper.sh"]
+CMD ["-b", "0.0.0.0", "--server-config", "standalone-ha.xml"]
+

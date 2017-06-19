@@ -1,0 +1,132 @@
+version: '3.2'
+
+secrets:
+  cert:
+    file: ./cert/server.crt
+  key:
+    file: ./cert/server.pem
+  kcexport:
+    file: ./kcexport.json
+
+services:
+  proxy:
+    image: traefik
+    restart: unless-stopped
+    command: --web --docker --docker.swarmmode --docker.exposedByDefault=false --loglevel=info
+    deploy:
+      placement:
+        # traefik needs to run on a manager node, as described in documentation
+        constraints:
+          - node.role == manager
+    volumes:
+      # traefik needs access to the docker socket to discover other containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev/null:/traefik.toml
+    ports:
+      - "80:80"
+      - "8080:8080"
+
+  keycloak:
+    build:
+      context: .
+      dockerfile: Dockerfile.Keycloak
+    image: cycloneproject/keycloak-postgres-ha-demo
+    restart: unless-stopped
+    environment:
+      - KC_IMPORT=true
+      - KEYCLOAK_REALM=master
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT_5432_TCP_ADDR=postgres
+      - POSTGRES_PORT_5432_TCP_PORT=5432
+    deploy:
+      replicas: 2
+      labels:
+        - "traefik.port=8080"
+        - "traefik.enable=true"
+        - "traefik.backend=keycloak"
+        - "traefik.frontend.rule=PathPrefix:/,/auth"
+    secrets:
+      - source: kcexport
+        target: kcexport.json
+        mode: 0444
+    depends_on:
+      - postgres
+    expose:
+      - "8080"
+
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    deploy:
+      replicas: 1
+    expose:
+      - "5432"
+
+  samlbridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.Samlbridge
+    image: cycloneproject/samlbridge-postgres-ha-demo
+    restart: unless-stopped
+    environment:
+      - FP_BASEURL=${FP_BASEURL}
+      - SAMLBRIDGE_CRON=changeMe
+      - SAMLBRIDGE_PASSWORD=admin
+      - SAMLBRIDGE_SALT=defaultsalt
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT_5432_TCP_ADDR=postgres
+      - POSTGRES_PORT_5432_TCP_PORT=5432
+    deploy:
+      replicas: 2
+      labels:
+        - "traefik.port=80"
+        - "traefik.enable=true"
+        - "traefik.backend=samlbridge"
+        - "traefik.frontend.rule=PathPrefix:/samlbridge"
+        - "traefik.backend.loadbalancer.sticky=true"
+    secrets:
+      - source: cert
+        target: server.crt
+        mode: 0444
+      - source: key
+        target: server.pem
+        mode: 0444
+    expose:
+      - "80"
+
+  samlidp:
+    image: cycloneproject/samlidp-demo
+    restart: unless-stopped
+    environment:
+      - FP_BASEURL=${FP_BASEURL}
+      - SAMLIDP_PASSWORD=admin
+      - SAMLIDP_SALT=defaultsalt
+      - SAMLIDP_CONTACTNAME
+      - SAMLIDP_CONTACTEMAIL
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.port=80"
+        - "traefik.enable=true"
+        - "traefik.backend=samlidp"
+        - "traefik.frontend.rule=PathPrefix:/samlidp"
+        #- "traefik.backend.loadbalancer.sticky=true"
+    secrets:
+      - source: cert
+        target: server.crt
+        mode: 0444
+      - source: key
+        target: server.pem
+        mode: 0444
+    expose:
+      - "80"
+
