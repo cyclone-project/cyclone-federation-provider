@@ -12,7 +12,8 @@ This repository is structured in 3 main directories: components, demo, and ha-de
 The base configuration in the components/ directory for the cyclone federation provider consists of 5 components:
 
   - [Traefik](https://traefik.io): To reverse-proxy from outside connections to the containers and load-balance.
-  - [Keycloak](http://keycloak.org): For openid-connect functionality, attribute mapping, client registration services, and connection to the federation through the samlbridge (SimpleSamlPHP) using SAML. This is the first user-facing component.
+  - [Keycloak](http://keycloak.org): For openid-connect functionality, attribute mapping, client registration services, and connection to the federation through the samlbridge (SimpleSamlPHP) using SAML. It uses the [cyclone-client-registration](https://github.com/cyclone-project/cyclone-client-registration) module.
+  This is the first user-facing component.
   - [SimpleSamlPHP](https://simplesamlphp.org): As a samlbridge to connect with the various IDPs in the federation (i.e. eduGAIN). This is the active participant in the SAML federation and allows us to add and maintain information on hundreds of IDPs. It allows the user to search and choose its home IDP by providing a discovery service frontend, filters the attributes received from said IDP, ensures that sufficient information is available to uniquely identify the user to a service, and chooses which piece of information to choose. Session information (NOT user data) is stored locally using phpsession.
   - [Postgresql](https://postgresql.org): The data store for Keycloak (and in ha-demo: the Samlbridge).
   - Cron: Runs two tasks periodically: (1) prompts SimpleSamlPHP to update IDP metadata hourly and (2) calls to the Keycloak REST API to determine and delete user data of users with no sessions.
