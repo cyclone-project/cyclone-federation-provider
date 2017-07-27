@@ -33,6 +33,19 @@ Demo (in the demo/ directory) and base configurations are mostly the same. Main 
 
  - cycloneproject/samlidp-demo
 
+The demo SamlIDP comes preconfigured with these users:
+
+| | | | | |
+|----------|------|-------|-------|-------|
+| Username | user | user2 | user3 | user4 |
+| Password | user | user  | user  | user  |
+| displayName | user | user2 | user3 | user4 |
+| eduPersonAffiliation | member,student | member,student | member,student | member,student |
+| mail | user1@samlidp.com | user2@samlidp.com | user3@samlidp.com | user4@samlidp.com |
+| schacHomeOrganization | admin | demo | demo | demo |
+| eduPersonTargetedID | ✔ | ✔ | ✔ | ✘ |
+
+
 ### HA-Demo Structure
 
 The HA-Demo (in the ha-demo/ directory) is structured with docker swarm mode in mind. It differs in few places from the demo structure to accomodate for the deployment of replicas. Certificates and kcexport.json are distributed using docker secrets. Other configuration either uses environment variables or is directly build into the images. Traefik, in addition to reverse-proxying, now also provides (sticky) load-balancing. Communication between containers/services is facilitated by a docker swarm mode overlay network. Keycloak does not use multicast (as is the default setting) for cluster discovery and management because the overlay network does not support it (currently, see [issue](https://github.com/docker/libnetwork/issues/552)). It uses the postgres database (JDBC_PING) and unicast instead. The Samlbridge is mostly stateless and uses postgres as a shared session store. Additional docker images:

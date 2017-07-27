@@ -20,7 +20,7 @@ $config = array(
             // mail
             'urn:oid:0.9.2342.19200300.100.1.3' => array('user1@samlidp.com'),
             // schacHomeOrganization
-            'urn:oid:1.3.6.1.4.1.25178.1.2.9' => array('demo'),
+            'urn:oid:1.3.6.1.4.1.25178.1.2.9' => array('admin'),
             // eduPersonTargetedID
             'urn:oid.1.3.6.1.4.1.5923.1.1.1.10' => array('<saml2:NameID xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" NameQualifier="samlidp" SPNameQualifier="samlidp">eduPersonTargetedID1</saml2:NameID>'),
         ),

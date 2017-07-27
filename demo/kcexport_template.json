@@ -256,7 +256,7 @@
     "identityProviderMapper" : "saml-user-attribute-idp-mapper",
     "config" : {
       "user.attribute" : "schacHomeOrganization",
-      "attribute.name" : "urn:oid:1.3.6.1.4.1.1466.155.121.1.15"
+      "attribute.name" : "urn:oid:1.3.6.1.4.1.25178.1.2.9"
     }
   }, {
     "name" : "eduPersonPrincipalName",
