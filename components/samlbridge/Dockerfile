@@ -1,6 +1,6 @@
 FROM php:apache
 
-ENV SSP_VERSION=1.14.14
+ENV SSP_VERSION=1.14.16
 ENV SSP_CHECKSUM=2ff76d8b379141cdd3340dbd8e8bab1605e7a862d4a31657cc37265817463f48
 
 RUN apt-get update && apt-get -y install libgmp-dev libmcrypt-dev wget zlib1g-dev \
