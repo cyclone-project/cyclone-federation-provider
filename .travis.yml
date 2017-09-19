@@ -25,10 +25,5 @@ before_install:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
-  - docker-compose -f $BASE_DIR/docker-compose.yml build
-  - docker-compose -f $DEMO_DIR/docker-compose.yml build
-  - docker-compose -f $HADEMO_DIR/docker-compose.yml build
-  - docker-compose -f $BASE_DIR/docker-compose.yml push
-  - docker-compose -f $DEMO_DIR/docker-compose.yml push
-  - docker-compose -f $HADEMO_DIR/docker-compose.yml push
+  - docker-compose -f $BASE_DIR/docker-compose.yml build && docker-compose -f $DEMO_DIR/docker-compose.yml build && docker-compose -f $DEMO_DIR/docker-compose.yml build && docker-compose -f $BASE_DIR/docker-compose.yml push && docker-compose -f $DEMO_DIR/docker-compose.yml push && docker-compose -f $HADEMO_DIR/docker-compose.yml push
 
