@@ -1,4 +1,4 @@
-FROM php:apache
+FROM php:7-apache
 
 ENV SSP_VERSION=1.14.16
 ENV SSP_CHECKSUM=77f1735a6e5faf2e34cfc0afc779d690a6e3fde38bef3ff4d963f82bea4f2b48
